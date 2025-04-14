@@ -6,9 +6,10 @@
 #define INBOXLISTVIEW_H
 
 
+#include "EmailCardList.h"
 #include "EmailEditor.h"
 #include "EmailListView.h"
-
+#include "Core.h"
 
 
 class InboxListView final : public EmailListView {
@@ -19,8 +20,6 @@ private:
     void OnEmailWrittenEvent(const EmailWrittenEvent& event);
 
 private:
-    Ref<DIContainer> m_DiContainer;
-    QStandardItemModel m_ItemModel;
 };
 
 

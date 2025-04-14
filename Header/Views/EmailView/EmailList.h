@@ -26,8 +26,6 @@ private:
     Ref<DIContainer> m_DiContainer;
 
     EmailListSearchBar m_SearchBar;
-    EmailListFilterFrame m_FilterFrame;
-    EmailListSortFrame m_SortFrame;
 
     QMap<EmailListViews, EmailListView*> m_ListViews;
     EmailListViews m_CurrentListView;

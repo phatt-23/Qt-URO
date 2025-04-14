@@ -7,6 +7,7 @@
 
 
 #include "DIContainer.h"
+#include "EmailCardList.h"
 #include "QComponent.h"
 #include "QtWidgets.h"
 
@@ -17,11 +18,9 @@ public:
     explicit EmailListView(const Ref<DIContainer>& diContainer, const QString& name, QWidget* parent = nullptr);
     ~EmailListView() override;
 
-
-
-private:
+protected:
     Ref<DIContainer> m_DiContainer;
-    QScrollArea* m_ScrollArea;
+    EmailCardList m_EmailCardList;
 };
 
 

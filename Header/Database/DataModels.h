@@ -7,6 +7,7 @@
 
 
 #include <QString>
+#include <qdebug.h>
 #include <string>
 
 /////////////////////////////////////////

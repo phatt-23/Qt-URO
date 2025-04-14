@@ -15,6 +15,7 @@ class DIContainer;
 class StatusBar final : public QStatusBar {
 public:
     explicit StatusBar(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
+
 private:
     Ref<DIContainer> m_DiContainer;
 };

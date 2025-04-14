@@ -6,10 +6,11 @@
 #define Q_COMPONENT_H
 
 
-#include "QtWidgets.h"
+#include <QGroupBox>
 
 
-class QComponent : public QGroupBox {
+class QComponent : public QGroupBox 
+{
 public:
     explicit QComponent(const QString& name, QWidget* parent = nullptr);
 

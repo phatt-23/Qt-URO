@@ -7,6 +7,8 @@
 
 
 #include "DIContainer.h"
+#include "EmailView/EmailListFilterFrame.h"
+#include "EmailView/EmailListSortFrame.h"
 #include "QComponent.h"
 #include "QtWidgets.h"
 #include "StdLib.h"
@@ -18,6 +20,14 @@ public:
 
 private:
     Ref<DIContainer> m_DiContainer;
+
+    QLineEdit m_Input;
+    QPushButton m_SearchButton;
+    QPushButton m_FilterOptionsButton;
+    QPushButton m_SortOptionsButton;
+
+    EmailListFilterFrame m_FilterFrame;
+    EmailListSortFrame m_SortFrame;
 };
 
 
