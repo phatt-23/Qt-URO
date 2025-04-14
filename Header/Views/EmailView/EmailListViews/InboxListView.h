@@ -17,7 +17,6 @@ public:
     explicit InboxListView(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
 
 private:
-    void OnEmailWrittenEvent(const EmailWrittenEvent& event);
 
 private:
 };

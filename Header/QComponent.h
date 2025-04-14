@@ -14,7 +14,8 @@ class QComponent : public QGroupBox
 public:
     explicit QComponent(const QString& name, QWidget* parent = nullptr);
 
-private:
+protected:
+    virtual void BindEvents();
 };
 
 

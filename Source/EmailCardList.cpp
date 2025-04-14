@@ -13,9 +13,7 @@ EmailCardList::EmailCardList(const Ref<DIContainer>& diContainer, QWidget* paren
 {
     m_ScrollArea.setWidgetResizable(true);
 
-    m_Container.setLayout(&m_ContainterLayout);
     m_ScrollArea.setWidget(&m_Container);
-
 
     // layout
     const auto layout = new QVBoxLayout(this);
@@ -42,7 +40,7 @@ void EmailCardList::ProjectEmails(const QList<Email>& emails)
     for (const auto& email : emails) 
     {
         const auto sender = userRepo->GetUser(email.SenderId);
-        m_ContainterLayout.addWidget(new EmailCard(email, sender.Email, this));
+        m_ContainterLayout.addWidget(new EmailCard(m_DiContainer, email, sender.Email, this));
     }
 }
 

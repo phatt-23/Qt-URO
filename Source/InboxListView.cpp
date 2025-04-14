@@ -47,7 +47,4 @@ InboxListView::InboxListView(const Ref<DIContainer>& diContainer, QWidget* paren
     // });
 }
 
-void InboxListView::OnEmailWrittenEvent(const EmailWrittenEvent& event)
-{
-}
 

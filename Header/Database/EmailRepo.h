@@ -17,6 +17,7 @@ public:
     ~EmailRepo() override;
 
     [[nodiscard]] QList<Email> GetAllEmails() const;
+    [[nodiscard]] Email GetEmail(int emailId) const;
 
 private:
     static Email MapToEmail(const QSqlQuery& query)

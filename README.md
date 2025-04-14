@@ -13,3 +13,7 @@ cmake --build . --target run
 ```
 
 
+## Notes
+
+First functionality, then styling.
+

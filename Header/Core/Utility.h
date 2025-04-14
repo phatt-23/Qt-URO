@@ -34,6 +34,21 @@ struct std::formatter<QString, char> {
     }
 };
 
+/////////////////////////////////////////////////
+/// QDEBUG //////////////////////////////////////
+/////////////////////////////////////////////////
 
+inline QDebug operator<<(QDebug dbg, const QStringList& stringList)
+{
+    dbg.nospace() << "[";
+    for (qsizetype i = 0; i < stringList.count(); i++)
+    {
+        dbg.nospace() << stringList.at(i);
+        if (i != stringList.count() - 1)
+            dbg.nospace() << ", ";
+    }
+    dbg.nospace() << "]";
+    return dbg;
+}
 #endif //UTILITY_H
 

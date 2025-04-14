@@ -9,3 +9,8 @@ QComponent::QComponent(const QString& name, QWidget* parent)
     // : QGroupBox(parent)
 {
 }
+
+
+void QComponent::BindEvents()
+{
+}

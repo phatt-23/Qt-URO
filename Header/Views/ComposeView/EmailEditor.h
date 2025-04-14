@@ -14,39 +14,90 @@
 
 class EmailEditor final : public QComponent {
 public:
-    explicit EmailEditor(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
-    ~EmailEditor() override;
-
     struct DataContext {
         explicit DataContext(QWidget* parent)
-            : SenderLideEdit(parent)
+            : SenderLineEdit(parent)
             , RecipientsLideEdit(parent)
             , SubjectLideEdit(parent)
             , TextBody(parent) {}
 
-        QLineEdit SenderLideEdit;
+        QLineEdit SenderLineEdit;
         QLineEdit RecipientsLideEdit;
         QLineEdit SubjectLideEdit;
         QTextEdit TextBody;
     };
 
+    enum ToolbarButtons { SEND, SAVE, ATTACH };
+
+public:
+    explicit EmailEditor(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
+    ~EmailEditor() override;
+
+
+private:
+    void BindEvents() override;
+
 private:
     Ref<DIContainer> m_DiContainer;
 
     QComponent m_ToolbarFrame;
+    QMap<ToolbarButtons, QPushButton*> m_ToolbarButtons;
+
     QComponent m_HeaderFrame;
     QComponent m_BodyFrame;
 
     Scope<DataContext> m_Data;
 };
 
+/////////////////////////////////////////
+// Events emitted by this component
+/////////////////////////////////////////
 
-// TODO: Remove, only for now
-struct EmailWrittenEvent final : public EventBase {
-    explicit EmailWrittenEvent(const EmailEditor::DataContext* data)
-        : m_Data(data) {}
-    const EmailEditor::DataContext* m_Data;
+struct SendEmailClickedEvent final : public EventBase {
+    SendEmailClickedEvent(const EmailEditor::DataContext& data) : EventBase(), Data(data) {}
+    const EmailEditor::DataContext& Data;
 };
+
+struct SaveEmailClickedEvent final : public EventBase {
+    SaveEmailClickedEvent(const EmailEditor::DataContext& data) : EventBase(), Data(data) {}
+    const EmailEditor::DataContext& Data;
+};
+
+/// Attachment(s) is/are chosen from the file dialog.
+struct AttachToEmailEvent final : public EventBase {
+    AttachToEmailEvent(const QStringList& attachments) : EventBase(), Attachments(attachments) {}
+    const QList<QString>& Attachments;
+};
+
+/// DEBUG //////////////////////////////
+
+inline QDebug operator<<(QDebug dbg, const EmailEditor::DataContext& d)
+{
+    dbg.nospace()
+    << "sender: " << d.SenderLineEdit.text()
+    << ", recipients: " << d.RecipientsLideEdit.text()
+    << ", subject: " << d.SubjectLideEdit.text()
+    << ", text: " << d.TextBody.toPlainText();
+    return dbg;
+}
+
+inline QDebug operator<<(QDebug dbg, const SendEmailClickedEvent& e)
+{
+    dbg.nospace() << "SendEmailClickedEvent(" << e.Data << ")";
+    return dbg;
+}
+
+inline QDebug operator<<(QDebug dbg, const SaveEmailClickedEvent& e)
+{
+    dbg.nospace() << "SaveEmailClickedEvent(" << e.Data << ")";
+    return dbg;
+}
+
+inline QDebug operator<<(QDebug dbg, const AttachToEmailEvent& e)
+{
+    dbg.nospace() << "AttachToEmailEvent(attachments: " << e.Attachments << ")";
+    return dbg;
+}
 
 
 

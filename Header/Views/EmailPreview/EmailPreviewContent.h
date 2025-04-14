@@ -5,6 +5,10 @@
 
 
 #include "DIContainer.h"
+#include "DataModels.h"
+#include "EmailPreviewHeader.h"
+#include "EmailPreviewBody.h"
+#include "EmailPreviewAttachments.h"
 #include "QComponent.h"
 
 
@@ -15,10 +19,20 @@ public:
     explicit EmailPreviewContent(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
     ~EmailPreviewContent() override;
 
+    void ShowEmail(Email const& email);
+    void HideEmail();
+
+private:
+    void BindEvents() override;
+
 private:
     Ref<DIContainer> m_DiContainer;
 
-    
+    QSplitter m_Splitter;  // vertical splitter for body and attachments
+
+    EmailPreviewHeader m_Header;
+    EmailPreviewBody m_Body;
+    EmailPreviewAttachments m_Attachments;
 };
 
 

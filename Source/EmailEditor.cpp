@@ -23,20 +23,20 @@ EmailEditor::EmailEditor(const Ref<DIContainer>& diContainer, QWidget* parent)
 
 
     // toolbar frame
-    const auto sendButton = new QPushButton("Send", &m_ToolbarFrame);
-    const auto saveButton = new QPushButton("Save", &m_ToolbarFrame);
-    const auto attachButton = new QPushButton("Attach", &m_ToolbarFrame);
+    m_ToolbarButtons[SEND] = new QPushButton("Send", &m_ToolbarFrame);
+    m_ToolbarButtons[SAVE] = new QPushButton("Save", &m_ToolbarFrame);
+    m_ToolbarButtons[ATTACH] = new QPushButton("Attach", &m_ToolbarFrame);
 
     const auto toolbarLayout = new QHBoxLayout(&m_ToolbarFrame);
-    toolbarLayout->addWidget(sendButton);
-    toolbarLayout->addWidget(saveButton);
+    toolbarLayout->addWidget(m_ToolbarButtons[SEND]);
+    toolbarLayout->addWidget(m_ToolbarButtons[SAVE]);
     toolbarLayout->addStretch();
-    toolbarLayout->addWidget(attachButton);
+    toolbarLayout->addWidget(m_ToolbarButtons[ATTACH]);
 
 
     // header frame
     const auto headerFormLayout = new QFormLayout(&m_HeaderFrame);
-    headerFormLayout->addRow("Sender", &m_Data->SenderLideEdit);
+    headerFormLayout->addRow("Sender", &m_Data->SenderLineEdit);
     headerFormLayout->addRow("Recipients", &m_Data->RecipientsLideEdit);
     headerFormLayout->addRow("Subject", &m_Data->SubjectLideEdit);
 
@@ -49,12 +49,29 @@ EmailEditor::EmailEditor(const Ref<DIContainer>& diContainer, QWidget* parent)
 
 
     // events
-    connect(sendButton, &QPushButton::clicked, this, [this] {
-        const auto bus = this->m_DiContainer->GetService<EventBus>();
-        bus->Emit<EmailWrittenEvent>(EmailWrittenEvent(this->m_Data.get()));
-    });
+    BindEvents();
 }
 
 EmailEditor::~EmailEditor()
 {
+}
+
+void EmailEditor::BindEvents() 
+{
+    const auto bus = this->m_DiContainer->GetService<EventBus>();
+
+    connect(m_ToolbarButtons[SEND], &QPushButton::clicked, this, [this, &bus] {
+        bus->Emit<SendEmailClickedEvent>(SendEmailClickedEvent(*this->m_Data.get()));
+    });
+
+    connect(m_ToolbarButtons[SAVE], &QPushButton::clicked, this, [this, &bus] {
+        bus->Emit<SaveEmailClickedEvent>(SaveEmailClickedEvent(*this->m_Data.get()));
+    });
+
+    connect(m_ToolbarButtons[ATTACH], &QPushButton::clicked, this, [this, &bus] {
+        const auto dialog = new QFileDialog(this);
+        const auto files = dialog->getOpenFileNames(this, "Choose attachments");
+
+        bus->ForwardEmit<AttachToEmailEvent>(files);
+    });
 }

@@ -7,6 +7,7 @@
 
 #include <QtSql/QtSql>
 #include "IService.h"
+#include "StdLib.h"
 
 
 class DbContext final : public IService {
@@ -16,11 +17,10 @@ public:
 
     bool Connect(const QString& dbPath);
     bool IsConnected() const;
-    const QSqlDatabase& GetDatabase() const;
+    QSqlDatabase GetDatabase() const;
 
 private:
     QString m_ConnectionName;
-    QSqlDatabase m_Database;
 };
 
 

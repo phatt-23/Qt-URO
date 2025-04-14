@@ -18,12 +18,15 @@ public:
     ~EmailPreview() override;
 
 private:
+    void BindEvents() override;
+
+    void PreviewEmail(int emailId);
+
+private:
     Ref<DIContainer> m_DiContainer;
 
     EmailPreviewToolbar m_EmailPreviewToolbar;
     EmailPreviewContent m_EmailPreviewContent;
-
-
 };
 
 

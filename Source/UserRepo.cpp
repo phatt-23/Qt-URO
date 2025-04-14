@@ -45,6 +45,7 @@ User UserRepo::GetUser(const QString& email) const
 User UserRepo::GetUser(const int userId) const
 {
     qInfo() << "UserRepo::GetUser() called!";
+
     QSqlQuery query(m_DbService->GetDatabase());
     query.prepare("SELECT * FROM user WHERE user_id = :user_id");
     query.bindValue(":user_id", userId);

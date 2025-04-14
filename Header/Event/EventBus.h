@@ -12,6 +12,7 @@
 struct EventBase : public QObject {
     Q_OBJECT
 public:
+    EventBase() {}
     ~EventBase() override {}
 };
 
@@ -62,6 +63,13 @@ public:
         const auto eventHandlers = it->second;
         for (const auto& handler : eventHandlers)
             handler(event);
+    }
+
+    template <typename EventType, typename... Args>
+    requires std::derived_from<EventType, EventBase>
+    inline auto ForwardEmit(Args&& ...args) -> void
+    {
+        Emit(EventType(std::forward<Args>(args)...));
     }
 
 private:
