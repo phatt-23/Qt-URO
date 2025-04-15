@@ -5,12 +5,15 @@
 #ifndef DBCONTEXT_H
 #define DBCONTEXT_H
 
+
+
 #include <QtSql/QtSql>
 #include "IService.h"
-#include "StdLib.h"
 
 
-class DbContext final : public IService {
+
+class DbContext final : public IService 
+{
 public:
     explicit DbContext(QString connectionName = "default");
     ~DbContext() override;

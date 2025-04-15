@@ -58,20 +58,19 @@ EmailEditor::~EmailEditor()
 
 void EmailEditor::BindEvents() 
 {
-    const auto bus = this->m_DiContainer->GetService<EventBus>();
+    auto bus = this->m_DiContainer->GetService<EventBus>();
 
-    connect(m_ToolbarButtons[SEND], &QPushButton::clicked, this, [this, &bus] {
-        bus->Emit<SendEmailClickedEvent>(SendEmailClickedEvent(*this->m_Data.get()));
+    connect(m_ToolbarButtons[SEND], &QPushButton::clicked, this, [this, bus] {
+        bus->ForwardEmit<SendEmailClickedEvent>(*this->m_Data.get());
     });
 
-    connect(m_ToolbarButtons[SAVE], &QPushButton::clicked, this, [this, &bus] {
-        bus->Emit<SaveEmailClickedEvent>(SaveEmailClickedEvent(*this->m_Data.get()));
+    connect(m_ToolbarButtons[SAVE], &QPushButton::clicked, this, [this, bus] {
+        bus->ForwardEmit<SaveEmailClickedEvent>(*this->m_Data.get());
     });
 
-    connect(m_ToolbarButtons[ATTACH], &QPushButton::clicked, this, [this, &bus] {
+    connect(m_ToolbarButtons[ATTACH], &QPushButton::clicked, this, [this, bus] {
         const auto dialog = new QFileDialog(this);
         const auto files = dialog->getOpenFileNames(this, "Choose attachments");
-
         bus->ForwardEmit<AttachToEmailEvent>(files);
     });
 }

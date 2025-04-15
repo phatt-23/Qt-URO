@@ -8,7 +8,7 @@ EmailPreviewContent::EmailPreviewContent(const Ref<DIContainer>& diContainer, QW
     , m_Splitter(this)
     , m_Header(m_DiContainer, this)
     , m_Body(&m_Splitter)
-    , m_Attachments(&m_Splitter)
+    , m_Attachments(m_DiContainer, &m_Splitter)
 {
     m_Splitter.setOrientation(Qt::Orientation::Vertical);
     m_Splitter.addWidget(&m_Body);          m_Splitter.setStretchFactor(0, 3);
@@ -45,6 +45,7 @@ void EmailPreviewContent::ShowEmail(Email const& email)
     qInfo() << "Show email" << email;
     m_Header.ProjectEmail(email);
     m_Body.ProjectEmail(email);
+    m_Attachments.ProjectEmail(email);
 }
 
 void EmailPreviewContent::HideEmail()

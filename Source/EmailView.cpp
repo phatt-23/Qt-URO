@@ -28,3 +28,7 @@ EmailView::EmailView(const Ref<DIContainer>& diContainer, QWidget* parent)
     const auto layout = new QVBoxLayout(this);
     layout->addWidget(&m_Splitter);
 }
+
+EmailView::~EmailView()
+{
+}

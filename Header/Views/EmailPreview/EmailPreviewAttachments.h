@@ -4,6 +4,8 @@
 
 
 
+#include "DIContainer.h"
+#include "DataModels.h"
 #include "QComponent.h"
 
 
@@ -12,11 +14,17 @@
 class EmailPreviewAttachments final : public QComponent
 {
 public:
-    EmailPreviewAttachments(QWidget* parent);
+    EmailPreviewAttachments(Ref<DIContainer> const& diContainer, QWidget* parent);
     ~EmailPreviewAttachments() override;
 
+    void ProjectEmail(Email const& email);
 
 private:
+    Ref<DIContainer> m_DiContainer;
+    
+    QScrollArea m_ScrollArea;
+    QWidget m_Container;
+    QVBoxLayout m_ContainerLayout;
 };
 
 

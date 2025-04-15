@@ -16,7 +16,7 @@
 class EmailPreviewContent : public QComponent
 {
 public:
-    explicit EmailPreviewContent(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
+    explicit EmailPreviewContent(const Ref<DIContainer>& diContainer, QWidget* parent);
     ~EmailPreviewContent() override;
 
     void ShowEmail(Email const& email);

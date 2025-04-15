@@ -17,6 +17,8 @@ EmailPreviewToolbar::EmailPreviewToolbar(QWidget* parent)
     {
         layout->addWidget(button);
     }
+
+    m_Buttons[DELETE_FOREVER]->hide();
 }
 
 

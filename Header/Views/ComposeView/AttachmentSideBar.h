@@ -16,6 +16,9 @@ public:
     explicit AttachmentSideBar(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
     ~AttachmentSideBar() override;
 
+    void BindEvents() override;
+
+    QList<QString> GetAttachments() const;
 private:
     Ref<DIContainer> m_DiContainer;
 

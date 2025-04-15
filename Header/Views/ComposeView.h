@@ -7,7 +7,6 @@
 
 
 #include "AttachmentSideBar.h"
-#include "Core.h"
 #include "EmailEditor.h"
 #include "QComponent.h"
 #include "StdLib.h"

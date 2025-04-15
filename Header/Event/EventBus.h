@@ -7,6 +7,7 @@
 
 
 #include "IService.h"
+#include <typeindex>
 
 
 struct EventBase : public QObject {
@@ -30,50 +31,54 @@ public:
     explicit EventBus() {}
     ~EventBus() override {}
 
+
     template <typename EventType>
     requires std::derived_from<EventType, EventBase>
     auto Subscribe(std::function<void(const EventType&)> handler) -> void
     {
-        // get the name of the event type
-        const std::string key = typeid(EventType).name();
+        const std::type_index key = typeid(EventType);
 
-        // wrap into closure that type checks the event data
-        auto wrappedHandler = [handler](const EventBase& event) -> void
-        {
+        auto wrappedHandler = [handler](const EventBase& event) {
             const auto& derivedEvent = dynamic_cast<const EventType&>(event);
             handler(derivedEvent);
         };
 
-        // add to the map of callbacks
-        m_Handlers[key].emplace_back(wrappedHandler);
+        m_Handlers[key].push_back(wrappedHandler);
     }
 
     template <typename EventType>
     requires std::derived_from<EventType, EventBase>
     auto Emit(const EventType& event) -> void
     {
-        const char* key = typeid(EventType).name();
+        const std::type_index key = typeid(EventType);
 
-        qInfo() << "Emitting:" << event;
+        qInfo() << "Emitting:" << event << " with key:" << QString::fromStdString(key.name());
 
-        const auto it = m_Handlers.find(key);
-        if (it == m_Handlers.end())  // no handlers
+        auto it = m_Handlers.find(key);
+        if (it == m_Handlers.end()) {
+            qInfo() << "No handlers for event type";
             return;
+        }
 
-        const auto eventHandlers = it->second;
+        const auto& eventHandlers = it->second;
+        qInfo() << "There are" << eventHandlers.size() << "listeners.";
+
         for (const auto& handler : eventHandlers)
             handler(event);
     }
+
+
 
     template <typename EventType, typename... Args>
     requires std::derived_from<EventType, EventBase>
     inline auto ForwardEmit(Args&& ...args) -> void
     {
-        Emit(EventType(std::forward<Args>(args)...));
+        EventType event(std::forward<Args>(args)...);
+        Emit(event);
     }
 
 private:
-   std::map<std::string, std::vector<std::function<void(const EventBase& event)>>> m_Handlers;
+    std::unordered_map<std::type_index, std::vector<std::function<void(const EventBase& event)>>> m_Handlers;
 };
 
 

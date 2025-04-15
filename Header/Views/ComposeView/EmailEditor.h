@@ -33,6 +33,7 @@ public:
     explicit EmailEditor(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
     ~EmailEditor() override;
 
+    const DataContext& GetDataContext() const { return *m_Data.get(); }
 
 private:
     void BindEvents() override;
@@ -53,23 +54,28 @@ private:
 // Events emitted by this component
 /////////////////////////////////////////
 
-struct SendEmailClickedEvent final : public EventBase {
+struct SendEmailClickedEvent final : public EventBase 
+{
     SendEmailClickedEvent(const EmailEditor::DataContext& data) : EventBase(), Data(data) {}
     const EmailEditor::DataContext& Data;
 };
 
-struct SaveEmailClickedEvent final : public EventBase {
+struct SaveEmailClickedEvent final : public EventBase 
+{
     SaveEmailClickedEvent(const EmailEditor::DataContext& data) : EventBase(), Data(data) {}
     const EmailEditor::DataContext& Data;
 };
 
 /// Attachment(s) is/are chosen from the file dialog.
-struct AttachToEmailEvent final : public EventBase {
-    AttachToEmailEvent(const QStringList& attachments) : EventBase(), Attachments(attachments) {}
-    const QList<QString>& Attachments;
+struct AttachToEmailEvent final : public EventBase 
+{
+    AttachToEmailEvent(const QStringList& attachments) : Attachments(attachments) {}
+    QList<QString> Attachments;
 };
 
+////////////////////////////////////////
 /// DEBUG //////////////////////////////
+////////////////////////////////////////
 
 inline QDebug operator<<(QDebug dbg, const EmailEditor::DataContext& d)
 {
