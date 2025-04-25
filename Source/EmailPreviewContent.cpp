@@ -11,9 +11,14 @@ EmailPreviewContent::EmailPreviewContent(const Ref<DIContainer>& diContainer, QW
     , m_Attachments(m_DiContainer, &m_Splitter)
 {
     m_Splitter.setOrientation(Qt::Orientation::Vertical);
-    m_Splitter.addWidget(&m_Body);          m_Splitter.setStretchFactor(0, 3);
-    m_Splitter.addWidget(&m_Attachments);   m_Splitter.setStretchFactor(1, 1);
+    m_Splitter.addWidget(&m_Body);
+    m_Splitter.addWidget(&m_Attachments);
 
+    // Set initial sizes for the splitter
+    QList<int> sizes = {300, 150}; 
+    m_Splitter.setSizes(sizes);
+
+    m_Attachments.hide();
 
     // layout
     const auto layout = new QVBoxLayout(this);
@@ -45,12 +50,16 @@ void EmailPreviewContent::ShowEmail(Email const& email)
     qInfo() << "Show email" << email;
     m_Header.ProjectEmail(email);
     m_Body.ProjectEmail(email);
-    m_Attachments.ProjectEmail(email);
+    m_Attachments.ProjectEmail(email.EmailId);
+    m_Email = email;
 }
 
 void EmailPreviewContent::HideEmail()
 {
     qInfo() << "Hide email";
-
+    m_Header.Clear();
+    m_Body.Clear();
+    m_Attachments.Clear();
+    m_Email = std::nullopt;
 }
 

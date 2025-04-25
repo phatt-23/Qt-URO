@@ -18,6 +18,7 @@ enum class EmailStatus
 {
     SENT,
     DRAFT,
+    REMOVED,
     DELETED,
     SENT_DRAFT,
 };
@@ -27,6 +28,7 @@ static EmailStatus GetEmailStatusFromString(const std::string& status)
     if (status == "sent") return EmailStatus::SENT;
     if (status == "draft") return EmailStatus::DRAFT;
     if (status == "deleted") return EmailStatus::DELETED;
+    if (status == "removed") return EmailStatus::REMOVED;
     if (status == "sent_draft") return EmailStatus::SENT_DRAFT;
 
     throw std::runtime_error("Unknown email status type: " + status);
@@ -38,6 +40,7 @@ static std::string GetEmailStatusString(EmailStatus status)
     {
         case EmailStatus::SENT: return "sent";
         case EmailStatus::DRAFT: return "draft";
+        case EmailStatus::REMOVED: return "removed";
         case EmailStatus::DELETED: return "deleted";
         case EmailStatus::SENT_DRAFT: return "draft";
     }

@@ -2,8 +2,7 @@
 // Created by phatt on 4/7/25.
 //
 
-#ifndef DICONTAINER_H
-#define DICONTAINER_H
+#pragma once
 
 
 #include "IService.h"
@@ -40,6 +39,3 @@ private:
     std::unordered_map<std::string, Ref<IService>> m_Services;
 };
 
-
-
-#endif //DICONTAINER_H

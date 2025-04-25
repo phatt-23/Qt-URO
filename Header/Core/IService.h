@@ -2,10 +2,7 @@
 // Created by phatt on 4/7/25.
 //
 
-#ifndef ISERVICE_H
-#define ISERVICE_H
-
-
+#pragma once
 
 #include "QtWidgets.h"
 
@@ -26,4 +23,3 @@ concept RefDerivedFromIService = requires
 };
 
 
-#endif //ISERVICE_H

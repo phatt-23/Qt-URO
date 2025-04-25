@@ -6,8 +6,11 @@
 #include "EmailEditor.h"
 #include "EventBus.h"
 #include "SideBar.h"
+#include <QImageReader>
+#include <QDialog>
 
-#include <QHeaderView>
+#include "AttachmentViewerDialog.h"
+
 
 AttachmentSideBar::AttachmentSideBar(const Ref<DIContainer>& diContainer, QWidget* parent)
     : QComponent("AttachmentSideBar", parent), m_DiContainer(diContainer)
@@ -44,16 +47,14 @@ AttachmentSideBar::~AttachmentSideBar()
 //     const QList<QString>& Attachments;
 // };
 
+
 void AttachmentSideBar::BindEvents()
 {
     auto bus = m_DiContainer->GetService<EventBus>();
 
-    bus->Subscribe<SideBarButtonClickedEvent>([](const SideBarButtonClickedEvent& e) {
-        qInfo() << "HERE" << e;
-    });
-
     bus->Subscribe<AttachToEmailEvent>([this](const AttachToEmailEvent& e) {
-        qInfo() << "HEEREEE:" << e;
+        if (m_Readonly)
+            return;
 
         for (const QString& a : e.Attachments) 
         {
@@ -62,18 +63,25 @@ void AttachmentSideBar::BindEvents()
     });
 
 
-    auto view = (QTableView*)m_AttachmentsView;
+    auto view = static_cast<QTableView*>(m_AttachmentsView);
 
     connect(view, &QAbstractItemView::pressed, this, [this, view](const QModelIndex& index) {
-        qInfo() << "Show menu for index" << index;
-
-        QMenu* menu = new QMenu(view); 
-        QAction* removeAction = menu->addAction("Remove");
+        auto const menu = new QMenu(view); 
+        QAction const* openAction = menu->addAction("Open");
+        QAction const* removeAction = menu->addAction("Remove");
 
         connect(removeAction, &QAction::triggered, this, [this, index]() {
-            qInfo() << "Remove action triggered for index" << index;
-
             m_Model->removeRow(index.row());
+        });
+
+        connect(openAction, &QAction::triggered, this, [this, index]() {
+            qInfo() << "Open action triggered";
+
+            const QStandardItem* item = m_Model->item(index.row());
+
+            const QString filepath = item->text();
+            auto const attachmentDialog = new AttachmentViewerDialog(filepath, this);
+            attachmentDialog->show();
         });
 
         menu->exec(QCursor::pos());  // Show the menu at the cursor position
@@ -83,10 +91,8 @@ void AttachmentSideBar::BindEvents()
 QList<QString> AttachmentSideBar::GetAttachments() const
 {
     QStringList files;
-    for (int i = 0; m_Model->rowCount(); i++)
-    {
+    for (int i = 0; i < m_Model->rowCount(); i++)
         files.append(m_Model->item(i)->text());
-    }
     return files;
 }
 

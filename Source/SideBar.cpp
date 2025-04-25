@@ -33,27 +33,47 @@ SideBar::SideBar(const Ref<DIContainer>& diContainer, QWidget* parent)
     layout->addWidget(m_Buttons[ViewsEnum::QUIT]);
 
 
+
+    BindEvents();
+}
+
+void SideBar::BindEvents()
+{
     // events
     const auto bus = m_DiContainer->GetService<EventBus>();
 
-    connect(m_Buttons[ViewsEnum::COMPOSE_VIEW], &QPushButton::clicked, this, [bus]{
-        bus->Emit(SideBarButtonClickedEvent{ ViewsEnum::COMPOSE_VIEW });
+    connect(m_Buttons[ViewsEnum::COMPOSE_VIEW], &QPushButton::clicked, [this, bus]{
+        SetLastClickedButton(ViewsEnum::COMPOSE_VIEW);
+        bus->ForwardEmit<SideBarButtonClickedEvent>(ViewsEnum::COMPOSE_VIEW);
     });
 
-    connect(m_Buttons[ViewsEnum::EMAIL_VIEW], &QPushButton::clicked, this, [bus]{
-        bus->Emit(SideBarButtonClickedEvent{ ViewsEnum::EMAIL_VIEW });
+    connect(m_Buttons[ViewsEnum::EMAIL_VIEW], &QPushButton::clicked, [this, bus]{
+        SetLastClickedButton(ViewsEnum::EMAIL_VIEW);
+        bus->ForwardEmit<SideBarButtonClickedEvent>(ViewsEnum::EMAIL_VIEW);
     });
 
-    connect(m_Buttons[ViewsEnum::CONTACTS_VIEW], &QPushButton::clicked, this, [bus]{
-        bus->Emit(SideBarButtonClickedEvent{ ViewsEnum::CONTACTS_VIEW });
+    connect(m_Buttons[ViewsEnum::CONTACTS_VIEW], &QPushButton::clicked, [this, bus]{
+        SetLastClickedButton(ViewsEnum::CONTACTS_VIEW);
+        bus->ForwardEmit<SideBarButtonClickedEvent>(ViewsEnum::CONTACTS_VIEW);
     });
 
-    connect(m_Buttons[ViewsEnum::QUIT], &QPushButton::clicked, this, [bus]{
-        bus->Emit(SideBarButtonClickedEvent{ ViewsEnum::QUIT });
+    connect(m_Buttons[ViewsEnum::QUIT], &QPushButton::clicked, [this, bus]{
+        bus->ForwardEmit<SideBarButtonClickedEvent>(ViewsEnum::QUIT);
     });
 
-    connect(m_Buttons[ViewsEnum::LOGOUT], &QPushButton::clicked, this, [bus]{
-        bus->Emit(SideBarButtonClickedEvent{ ViewsEnum::LOGOUT });
+    connect(m_Buttons[ViewsEnum::LOGOUT], &QPushButton::clicked, [this, bus]{
+        bus->ForwardEmit<SideBarButtonClickedEvent>(ViewsEnum::LOGOUT);
     });
+}
+
+void SideBar::SetLastClickedButton(ViewsEnum const view)
+{
+    if (m_LastClickedButton)
+    {
+        m_LastClickedButton->setChecked(false);
+    }
+
+    m_LastClickedButton = m_Buttons[view];
+    m_LastClickedButton->setChecked(true);
 
 }

@@ -2,13 +2,11 @@
 // Created by phatt on 4/12/25.
 //
 
-#ifndef DBCONTEXT_H
-#define DBCONTEXT_H
+#pragma once
 
 
-
-#include <QtSql/QtSql>
 #include "IService.h"
+#include <QtSql/QtSql>
 
 
 
@@ -27,5 +25,3 @@ private:
 };
 
 
-
-#endif //DBCONTEXT_H

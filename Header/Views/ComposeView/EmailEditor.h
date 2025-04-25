@@ -6,6 +6,8 @@
 #define EMAILEDITOR_H
 
 
+#include <qcombobox.h>
+
 #include "DIContainer.h"
 #include "EventBus.h"
 #include "QComponent.h"
@@ -18,12 +20,12 @@ public:
         explicit DataContext(QWidget* parent)
             : SenderLineEdit(parent)
             , RecipientsLideEdit(parent)
-            , SubjectLideEdit(parent)
+            , SubjectLineEdit(parent)
             , TextBody(parent) {}
 
         QLineEdit SenderLineEdit;
         QLineEdit RecipientsLideEdit;
-        QLineEdit SubjectLideEdit;
+        QLineEdit SubjectLineEdit;
         QTextEdit TextBody;
     };
 
@@ -35,8 +37,33 @@ public:
 
     const DataContext& GetDataContext() const { return *m_Data.get(); }
 
+
+    inline void SetReadonly(const bool value) const
+    {
+        m_Data->RecipientsLideEdit.setReadOnly(value);
+        m_Data->SubjectLineEdit.setReadOnly(value);
+        m_Data->TextBody.setReadOnly(value);
+    }
+
+    inline void SetEntries(QString const& recipients, QString const& subject, QString const& body) const
+    {
+        m_Data->RecipientsLideEdit.setText(recipients);
+        m_Data->SubjectLineEdit.setText(subject);
+        m_Data->TextBody.setText(body);
+    }
+
+    inline void ClearEntries() const
+    {
+        m_Data->RecipientsLideEdit.clear();
+        m_Data->SubjectLineEdit.clear();
+        m_Data->TextBody.clear();
+    }
+
+    void RenewContacts();
+
 private:
     void BindEvents() override;
+    void ShowContactMenu();
 
 private:
     Ref<DIContainer> m_DiContainer;
@@ -48,6 +75,8 @@ private:
     QComponent m_BodyFrame;
 
     Scope<DataContext> m_Data;
+
+    QPushButton* m_ContactChooser;
 };
 
 /////////////////////////////////////////
@@ -82,7 +111,7 @@ inline QDebug operator<<(QDebug dbg, const EmailEditor::DataContext& d)
     dbg.nospace()
     << "sender: " << d.SenderLineEdit.text()
     << ", recipients: " << d.RecipientsLideEdit.text()
-    << ", subject: " << d.SubjectLideEdit.text()
+    << ", subject: " << d.SubjectLineEdit.text()
     << ", text: " << d.TextBody.toPlainText();
     return dbg;
 }

@@ -13,8 +13,10 @@
 
 
 
-class EmailPreviewContent : public QComponent
+class EmailPreviewContent final : public QComponent
 {
+public:
+    friend class EmailPreview;
 public:
     explicit EmailPreviewContent(const Ref<DIContainer>& diContainer, QWidget* parent);
     ~EmailPreviewContent() override;
@@ -28,6 +30,7 @@ private:
 private:
     Ref<DIContainer> m_DiContainer;
 
+    std::optional<Email> m_Email;
     QSplitter m_Splitter;  // vertical splitter for body and attachments
 
     EmailPreviewHeader m_Header;

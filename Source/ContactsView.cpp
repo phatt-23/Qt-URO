@@ -9,7 +9,8 @@
 #include "Utility.h"
 
 ContactsView::ContactsView(const Ref<DIContainer>& diContainer, QWidget* parent)
-    : QComponent("ContactsView", parent), m_DiContainer(diContainer)
+    : BaseView("ContactsView", parent)
+    , m_DiContainer(diContainer)
     , m_ContactsView(new QTableView(this))
     , m_ContactsModel(new QStandardItemModel(0, 3, m_ContactsView))
 {

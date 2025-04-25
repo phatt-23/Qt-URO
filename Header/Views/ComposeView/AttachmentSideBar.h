@@ -16,14 +16,33 @@ public:
     explicit AttachmentSideBar(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
     ~AttachmentSideBar() override;
 
+    QList<QString> GetAttachments() const;
+    
+    inline void SetReadonly(bool value) { m_Readonly = value; }
+    inline void Clear() const
+    {
+        m_Model->clear();
+    }
+
+    inline void SetList(QStringList const& attachments) const
+    {
+        Clear();
+        for (const QString& a : attachments)
+        {
+            m_Model->appendRow(QList<QStandardItem*>() << new QStandardItem(a));
+        }
+    }
+
+private:
     void BindEvents() override;
 
-    QList<QString> GetAttachments() const;
 private:
     Ref<DIContainer> m_DiContainer;
 
     QAbstractItemView* m_AttachmentsView;
     QStandardItemModel* m_Model;
+
+    bool m_Readonly = false;
 };
 
 

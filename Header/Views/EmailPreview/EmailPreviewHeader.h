@@ -17,6 +17,7 @@ public:
     ~EmailPreviewHeader() override;
    
     void ProjectEmail(Email const& email);
+    void Clear();
 
 private:
     Ref<DIContainer> m_DiContainer;
@@ -28,6 +29,6 @@ private:
 
 
 
-#endif  // INCLUDE_EMAILPREVIEW_EMAILPREVIEWHEADER_H_
+#endif
 
 

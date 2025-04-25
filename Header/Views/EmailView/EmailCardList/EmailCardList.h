@@ -14,7 +14,12 @@ public:
     explicit EmailCardList(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
     ~EmailCardList() override;
 
+    // projects provided emails
     void ProjectEmails(const QList<Email>& emails);
+
+
+private:
+    void BindEvents() override;
 
 private:
     Ref<DIContainer> m_DiContainer;
@@ -23,7 +28,7 @@ private:
 
     // container inside scroll area
     QWidget m_Container;
-    QVBoxLayout m_ContainterLayout;
+    QVBoxLayout m_ContainerLayout;
 };
 
 

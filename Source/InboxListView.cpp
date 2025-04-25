@@ -4,6 +4,7 @@
 
 #include "InboxListView.h"
 
+#include "Config.h"
 #include "EmailCardList.h"
 #include "EmailEditor.h"
 #include "Database/EmailRepo.h"
@@ -17,34 +18,19 @@
 InboxListView::InboxListView(const Ref<DIContainer>& diContainer, QWidget* parent)
     : EmailListView(diContainer, "InboxListView", parent)
 {
-    // TODO : load from db (remove later)
-    const auto emailRepo = diContainer->GetService<EmailRepo>();
-    const auto userRepo = diContainer->GetService<UserRepo>();
-
-
-    const auto emails = emailRepo->GetAllEmails();
-    m_EmailCardList.ProjectEmails(emails);
-
-
-
     // layout
     const auto layout = new QVBoxLayout(this);
     layout->addWidget(&m_EmailCardList);
+}
 
+void InboxListView::ShowEmails(QString const& searchString)
+{
+    const auto emailRepo = m_DiContainer->GetService<EmailRepo>();
+    const auto userRepo = m_DiContainer->GetService<UserRepo>();
 
-    // const auto bus = m_DiContainer->GetService<EventBus>();
-    // bus->Subscribe<EmailWrittenEvent>([this](const auto& e) {
-    //     const EmailEditor::DataContext* data = e.m_Data;
-    //
-    //     const QList<QStandardItem*> row = {
-    //         new QStandardItem(data->SenderLideEdit.text()),
-    //         new QStandardItem(data->RecipientsLideEdit.text()),
-    //         new QStandardItem(data->SubjectLideEdit.text()),
-    //         new QStandardItem(data->TextBody.toPlainText()),
-    //     };
-    //
-    //     m_ItemModel.appendRow(row);
-    // });
+    const auto user = userRepo->GetUser(DEFAULT_EMAIL_ADDRESS);
+    const auto emails = emailRepo->GetEmailsTo(user.UserId, searchString);
+    m_EmailCardList.ProjectEmails(emails);
 }
 
 

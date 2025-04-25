@@ -7,6 +7,7 @@
 
 
 #include "DIContainer.h"
+#include "EventBus.h"
 #include "EmailView/EmailListFilterFrame.h"
 #include "EmailView/EmailListSortFrame.h"
 #include "QComponent.h"
@@ -15,8 +16,19 @@
 
 
 class EmailListSearchBar final : public QComponent {
+    Q_OBJECT
+signals:
+    void EmailSearchEvent(QString const& searchString);
+
 public:
     explicit EmailListSearchBar(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
+
+private:
+    void BindEvents() override;
+
+    void OnSearchButtonClicked();
+    void OnFilterButtonClicked();
+    void OnSortButtonClicked();
 
 private:
     Ref<DIContainer> m_DiContainer;
@@ -29,7 +41,5 @@ private:
     EmailListFilterFrame m_FilterFrame;
     EmailListSortFrame m_SortFrame;
 };
-
-
 
 #endif //SEARCHBAR_H

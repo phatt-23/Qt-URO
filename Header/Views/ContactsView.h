@@ -7,10 +7,10 @@
 
 
 #include "Core.h"
-#include "QComponent.h"
+#include "EmailView/BaseView.h"
 
 
-class ContactsView final : public QComponent {
+class ContactsView final : public BaseView {
 
 public:
     explicit ContactsView(const Ref<DIContainer>& diContainer, QWidget* parent);

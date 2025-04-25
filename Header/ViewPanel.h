@@ -11,6 +11,7 @@
 #include "QComponent.h"
 #include "SideBar.h"
 #include "Core/StdLib.h"
+#include "EmailView/BaseView.h"
 
 
 class ViewPanel final : public QComponent {
@@ -23,7 +24,7 @@ private slots:
 private:
     Ref<DIContainer> m_DiContainer;
 
-    QMap<ViewsEnum, QWidget*> m_Views;
+    QMap<ViewsEnum, BaseView*> m_Views;
 };
 
 

@@ -4,6 +4,10 @@
 
 #include "EmailEditor.h"
 
+#include <qcombobox.h>
+
+#include "UserRepo.h"
+
 EmailEditor::EmailEditor(const Ref<DIContainer>& diContainer, QWidget* parent)
     : QComponent("EmailEditor", parent), m_DiContainer(diContainer)
     // init children
@@ -11,6 +15,7 @@ EmailEditor::EmailEditor(const Ref<DIContainer>& diContainer, QWidget* parent)
     , m_HeaderFrame("HeaderFrame", this)
     , m_BodyFrame("BodyFrame", this)
     , m_Data(CreateScope<DataContext>(this))  // data context
+    , m_ContactChooser(new QPushButton("Choose contact", this)) // Replace QComboBox with QPushButton
 {
     // layout children
     const auto layout = new QVBoxLayout(this);
@@ -37,16 +42,32 @@ EmailEditor::EmailEditor(const Ref<DIContainer>& diContainer, QWidget* parent)
     // header frame
     const auto headerFormLayout = new QFormLayout(&m_HeaderFrame);
     headerFormLayout->addRow("Sender", &m_Data->SenderLineEdit);
-    headerFormLayout->addRow("Recipients", &m_Data->RecipientsLideEdit);
-    headerFormLayout->addRow("Subject", &m_Data->SubjectLideEdit);
+
+    // recipients line edit with contact chooser
+    auto const recipientRow = new QWidget(this);
+
+    auto const recipientRowLayout = new QHBoxLayout(recipientRow);
+    recipientRowLayout->setContentsMargins(0, 0, 0, 0);
+    recipientRowLayout->setSpacing(5);
+
+    recipientRowLayout->addWidget(&m_Data->RecipientsLideEdit);
+    recipientRowLayout->addWidget(m_ContactChooser);
+
+    headerFormLayout->addRow("Recipients", recipientRow);
+    headerFormLayout->addRow("Subject", &m_Data->SubjectLineEdit);
 
 
     // body frame
     m_Data->TextBody.setPlaceholderText("Start typing...");
 
+
     const auto bodyLayout = new QVBoxLayout(&m_BodyFrame);
     bodyLayout->addWidget(&m_Data->TextBody);
 
+
+    // set default email
+    m_Data->SenderLineEdit.setReadOnly(true);
+    m_Data->SenderLineEdit.setText("tra0163@vsb.cz");
 
     // events
     BindEvents();
@@ -56,11 +77,62 @@ EmailEditor::~EmailEditor()
 {
 }
 
-void EmailEditor::BindEvents() 
+bool IsValidEmail(QString const& email)
+{
+    const QRegularExpression regex(R"((^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$))");
+    return regex.match(email).hasMatch();
+}
+
+void EmailEditor::ShowContactMenu()
+{
+    const auto users = m_DiContainer->GetService<UserRepo>()->GetAllUsers();
+
+    auto* menu = new QMenu(m_ContactChooser);
+
+    for (const auto& user : users)
+    {
+        QAction const* action = menu->addAction(user.Email);
+
+        connect(action, &QAction::triggered, this, [this, user]() {
+            QString currentText = m_Data->RecipientsLideEdit.text();
+
+            if (!currentText.isEmpty())
+            {
+                currentText += ", ";
+            }
+
+            currentText += user.Email;
+
+            m_Data->RecipientsLideEdit.setText(currentText);
+
+            // Emit an event or handle the selection
+            qDebug() << "Selected contact:" << user.Email;
+        });
+    }
+
+    // Show the menu below the button
+    menu->exec(QCursor::pos());
+}
+
+void EmailEditor::BindEvents()
 {
     auto bus = this->m_DiContainer->GetService<EventBus>();
 
     connect(m_ToolbarButtons[SEND], &QPushButton::clicked, this, [this, bus] {
+        auto recipients = m_Data->RecipientsLideEdit.text().split(',', Qt::SkipEmptyParts);
+
+        for (const auto& recipient : recipients) {
+            if (!IsValidEmail(recipient.trimmed())) {
+                m_Data->RecipientsLideEdit.setStyleSheet("border: 2px solid red;");
+                QMessageBox::warning(this, "Invalid Email", "One or more recipient email addresses are invalid.");
+                return;
+            } 
+            else 
+            {
+                m_Data->RecipientsLideEdit.setStyleSheet("");
+            }
+        }
+
         bus->ForwardEmit<SendEmailClickedEvent>(*this->m_Data.get());
     });
 
@@ -73,4 +145,7 @@ void EmailEditor::BindEvents()
         const auto files = dialog->getOpenFileNames(this, "Choose attachments");
         bus->ForwardEmit<AttachToEmailEvent>(files);
     });
+
+    connect(m_ContactChooser, &QPushButton::clicked, this, &EmailEditor::ShowContactMenu);
 }
+

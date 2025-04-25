@@ -2,8 +2,7 @@
 // Created by phatt on 4/7/25.
 //
 
-#ifndef STDLIB_H
-#define STDLIB_H
+#pragma once
 
 // STD LIBRARY
 //
@@ -81,5 +80,3 @@ Scope<T> CreateScope(T* ptr)
     return std::make_unique<T>(ptr);
 }
 
-
-#endif //STDLIB_H

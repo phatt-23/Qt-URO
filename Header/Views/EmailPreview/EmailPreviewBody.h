@@ -13,10 +13,14 @@
 class EmailPreviewBody final : public QComponent 
 {
 public:
-    EmailPreviewBody(QWidget* parent);
+    explicit EmailPreviewBody(QWidget* parent);
     ~EmailPreviewBody() override;
 
     void ProjectEmail(Email const& email);
+    inline void Clear()
+    {
+        m_TextEdit.clear();
+    }
 
 private:
     QTextEdit m_TextEdit;

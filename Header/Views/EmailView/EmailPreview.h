@@ -17,9 +17,11 @@ public:
     explicit EmailPreview(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
     ~EmailPreview() override;
 
+    void Show();
+    void Hide();
+
 private:
     void BindEvents() override;
-
     void PreviewEmail(int emailId);
 
 private:

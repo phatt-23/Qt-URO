@@ -1,0 +1,9 @@
+{
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "files.associations": {
+        "filesystem": "cpp",
+        "qstandarditem": "cpp",
+        "qtsql": "cpp",
+        "qpushbutton": "cpp"
+    }
+}

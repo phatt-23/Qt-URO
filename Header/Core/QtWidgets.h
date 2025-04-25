@@ -2,12 +2,9 @@
 // Created by phatt on 4/7/25.
 //
 
-#ifndef QTWIDGETS_H
-#define QTWIDGETS_H
+#pragma once
 
-
-
-#include <qobject.h>
+#include <QtCore/qobject.h>
 #include <QPushButton>
 #include <QRadioButton>
 #include <QLayout>
@@ -43,7 +40,5 @@
 #include <QColumnView>
 #include <QScrollArea>
 #include <QMessageBox>
+#include <QHeaderView>
 
-
-
-#endif //QTWIDGETS_H

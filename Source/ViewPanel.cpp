@@ -42,6 +42,7 @@ ViewPanel::ViewPanel(const Ref<DIContainer>& diContainer, QWidget* parent)
 
             // show selected
             m_Views[e.View]->show();
+            m_Views[e.View]->OnEnter();
         }
     });
 }

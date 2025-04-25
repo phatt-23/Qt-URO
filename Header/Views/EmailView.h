@@ -7,15 +7,18 @@
 
 
 #include "QComponent.h"
+#include "EmailView/BaseView.h"
 #include "EmailView/CategoryList.h"
 #include "EmailView/EmailList.h"
 #include "EmailView/EmailPreview.h"
 
 
-class EmailView final : public QComponent {
+class EmailView final : public BaseView {
 public:
     explicit EmailView(const Ref<DIContainer>& diContainer, QWidget* parent);
     ~EmailView() override;
+
+    void OnEnter() override {};
 
 private:
     Ref<DIContainer> m_DiContainer;

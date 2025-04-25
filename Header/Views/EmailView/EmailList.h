@@ -12,15 +12,27 @@
 #include "QComponent.h"
 #include "QtWidgets.h"
 #include "EmailListViews/EmailListView.h"
-#include "EmailListViews/EmailListViews.h"
 
 
 class EmailList final : public QComponent {
+public:
+    enum EmailListViews
+    {
+        INBOX_LIST_VIEW,
+        DRAFT_LIST_VIEW,
+        SENT_MAIL_LIST_VIEW,
+        ALL_MAIL_LIST_VIEW,
+        BIN_LIST_VIEW,
+        // ...
+    };
+
 public:
     explicit EmailList(const Ref<DIContainer>& diContainer, QWidget* parent);
 
 private:
     void HideAllViews() const;
+    void BindEvents() override;
+    void SetCurrentView(EmailListViews view);
 
 private:
     Ref<DIContainer> m_DiContainer;

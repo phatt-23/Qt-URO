@@ -2,8 +2,7 @@
 // Created by phatt on 4/13/25.
 //
 
-#ifndef UTILITY_H
-#define UTILITY_H
+#pragma once
 
 
 #include <QStandardItem>
@@ -26,7 +25,7 @@ struct std::formatter<QString, char> {
     constexpr auto parse(std::format_parse_context& ctx) {
         return base.parse(ctx);  // reuse the base formatter for std::string_view
     }
-
+    
     template <typename FormatContext>
     auto format(const QString& qstr, FormatContext& ctx) {
         // Convert QString to UTF-8 std::string_view for compatibility
@@ -50,5 +49,4 @@ inline QDebug operator<<(QDebug dbg, const QStringList& stringList)
     dbg.nospace() << "]";
     return dbg;
 }
-#endif //UTILITY_H
 

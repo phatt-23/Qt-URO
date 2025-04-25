@@ -18,10 +18,17 @@ class SideBar final : public QComponent {
 public:
     explicit SideBar(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
 
+    void SetLastClickedButton(ViewsEnum const view);
+
+private:
+    void BindEvents() override;
+
 private:
     Ref<DIContainer> m_DiContainer;
 
     QMap<ViewsEnum, QPushButton*> m_Buttons;
+
+    QPushButton* m_LastClickedButton = nullptr;
 };
 
 
@@ -29,6 +36,7 @@ private:
 struct SideBarButtonClickedEvent final : public EventBase {
     explicit SideBarButtonClickedEvent(const ViewsEnum view) : View(view) {}
     ViewsEnum View;
+
 };
 
 

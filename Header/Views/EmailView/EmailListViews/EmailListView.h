@@ -18,6 +18,8 @@ public:
     explicit EmailListView(const Ref<DIContainer>& diContainer, const QString& name, QWidget* parent = nullptr);
     ~EmailListView() override;
 
+    virtual void ShowEmails(QString const& filterString = "") = 0;
+
 protected:
     Ref<DIContainer> m_DiContainer;
     EmailCardList m_EmailCardList;

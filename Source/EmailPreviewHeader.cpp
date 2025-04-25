@@ -28,9 +28,9 @@ void EmailPreviewHeader::ProjectEmail(Email const& email)
     auto const& emailRepo = m_DiContainer->GetService<EmailRepo>();
     auto const& sender = userRepo->GetUser(email.SenderId);
 
-    m_SubjectLabel.setText(email.Subject);
+    m_SubjectLabel.setText("Subject: " + email.Subject);
    
-    m_SenderLabel.setText(sender.Email + " " + sender.FirstName + " " + sender.LastName);
+    m_SenderLabel.setText("Sender: " + sender.Email + " " + sender.FirstName + " " + sender.LastName);
 
     auto const& recipients = userRepo->GetRecipients(email.EmailId);
    
@@ -38,5 +38,12 @@ void EmailPreviewHeader::ProjectEmail(Email const& email)
     for (auto const& r : recipients)
         recipientConcat += r.Email + " " + r.FirstName + " " + r.LastName + "\n";
 
-    m_RecipientsLabel.setText(recipientConcat);
+    m_RecipientsLabel.setText((recipients.count() <= 1) ? "Recipient: " : "Recipients:\n" + recipientConcat);
+}
+
+void EmailPreviewHeader::Clear()
+{
+    m_RecipientsLabel.setText("[recipients]");
+    m_SubjectLabel.setText("[subject]");
+    m_SenderLabel.setText("[sender]");
 }

@@ -16,7 +16,7 @@ class InboxListView final : public EmailListView {
 public:
     explicit InboxListView(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
 
-private:
+    void ShowEmails(QString const& searchString) override;
 
 private:
 };

@@ -5,7 +5,8 @@
 #include "../Header/Views/EmailView.h"
 
 EmailView::EmailView(const Ref<DIContainer>& diContainer, QWidget* parent)
-    : QComponent("EmailView", parent), m_DiContainer(diContainer)
+    : BaseView("EmailView", parent)
+    , m_DiContainer(diContainer)
     , m_Splitter(Qt::Horizontal, this)
     , m_CategoryList(diContainer, this)
     , m_EmailList(diContainer, this)

@@ -22,9 +22,40 @@ EmailListSearchBar::EmailListSearchBar(const Ref<DIContainer>& diContainer, QWid
     horizontalLayout->addWidget(&m_FilterOptionsButton);
     horizontalLayout->addWidget(&m_SortOptionsButton);
 
+    m_SortOptionsButton.hide();
 
     const auto layout = new QVBoxLayout(this);
     layout->addLayout(horizontalLayout);
     layout->addWidget(&m_FilterFrame);
     layout->addWidget(&m_SortFrame);
+
+    m_FilterFrame.setVisible(false);
+    m_SortFrame.setVisible(false);
+
+    BindEvents();
 }
+
+void EmailListSearchBar::BindEvents()
+{
+    connect(&m_SearchButton, &QPushButton::clicked, this, &EmailListSearchBar::OnSearchButtonClicked);
+    connect(&m_FilterOptionsButton, &QPushButton::clicked, this, &EmailListSearchBar::OnFilterButtonClicked);
+    // connect(&m_SortOptionsButton, &QPushButton::clicked, this, &EmailListSearchBar::OnSortButtonClicked);
+}
+
+void EmailListSearchBar::OnSearchButtonClicked()
+{
+    emit EmailSearchEvent(m_Input.text());
+}
+
+void EmailListSearchBar::OnFilterButtonClicked()
+{
+    m_FilterFrame.setVisible(!m_FilterFrame.isVisible());
+}
+
+void EmailListSearchBar::OnSortButtonClicked()
+{
+    m_SortFrame.setVisible(!m_SortFrame.isVisible());
+}
+
+
+

@@ -11,6 +11,7 @@
 
 class QComponent : public QGroupBox 
 {
+    Q_OBJECT
 public:
     explicit QComponent(const QString& name, QWidget* parent = nullptr);
 

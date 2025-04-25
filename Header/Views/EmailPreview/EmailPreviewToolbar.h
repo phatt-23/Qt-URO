@@ -2,16 +2,17 @@
 #define INCLUDE_EMAILPREVIEW_EMAILPREVIEWTOOLBAR_H_
 
 
-
-
+#include "DIContainer.h"
 #include "QComponent.h"
 #include "QtWidgets.h"
 
 
 
-class EmailPreviewToolbar : public QComponent 
+class EmailPreviewToolbar final : public QComponent
 {
 public:
+    friend class EmailPreview;
+
     enum PreviewToolbarButton 
     {
         REPLY,
@@ -23,10 +24,13 @@ public:
     };
 
 public:
-    explicit EmailPreviewToolbar(QWidget* parent = nullptr);
+    explicit EmailPreviewToolbar(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
     ~EmailPreviewToolbar() override;
 
+    void HideButtons() const;
+
 private:
+    Ref<DIContainer> m_DiContainer;
 
     QMap<PreviewToolbarButton, QPushButton*> m_Buttons;
 };

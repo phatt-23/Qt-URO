@@ -8,16 +8,24 @@
 
 
 #include "DataModels.h"
+#include "EventBus.h"
 #include "StdLib.h"
 
 
 class EmailRepo final : public IService {
 public:
-    explicit EmailRepo(const Ref<DbContext>& dbService);
+    explicit EmailRepo(const Ref<DbContext>& dbService, const Ref<EventBus>& eventBus);
     ~EmailRepo() override;
 
-    [[nodiscard]] QList<Email> GetAllEmails() const;
     [[nodiscard]] Email GetEmail(int emailId) const;
+    [[nodiscard]] QList<Email> GetAllEmails() const;
+    [[nodiscard]] QList<Email> GetEmailsFrom(const int userId, QString const& searchString = "") const;
+    [[nodiscard]] QList<Email> GetEmailsFrom(const int userId, EmailStatus const status, QString const& searchString = "") const;
+
+    [[nodiscard]] QList<Email> GetEmailsTo(const int userId, QString const& searchString) const;
+    [[nodiscard]] QList<Email> GetEmailsTo(const int userId, EmailStatus const status, QString const& searchString) const;
+
+    void SetEmailStatus(int emailId, EmailStatus const status) const;
 
 private:
     static Email MapToEmail(const QSqlQuery& query)
@@ -36,8 +44,16 @@ private:
     }
 
     Ref<DbContext> m_DbService;
+    Ref<EventBus> m_EventBus;
 };
 
+struct EmailStatusChangedEvent final : EventBase
+{
+    EmailStatusChangedEvent(int const emailId, EmailStatus const status)
+        : EmailId(emailId), Status(status) {}
 
+    int EmailId;
+    EmailStatus Status;
+};
 
 #endif //EMAILREPO_H

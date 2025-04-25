@@ -17,16 +17,22 @@ AttachmentRepo::~AttachmentRepo()
 
 QList<Attachment> AttachmentRepo::GetAttachments(const int emailId) const
 {
-    QSqlQuery query(R"(
-        SELECT *
+    qInfo() << __PRETTY_FUNCTION__ << "called!";
+
+    QSqlQuery query(m_DbService->GetDatabase());
+    query.prepare(R"(
+        SELECT a.*
         FROM attachment a
         JOIN email_attachment ea ON a.attachment_id = ea.attachment_id
         WHERE ea.email_id = :email_id
-    )", m_DbService->GetDatabase());
+    )");
 
     query.bindValue(":email_id", emailId);
 
-    query.exec();
+    if (!query.exec())
+    {
+        throw std::runtime_error("Query execution failed: " + query.lastError().text().toStdString());
+    }
 
     QList<Attachment> attachments;
 
@@ -40,10 +46,10 @@ Attachment AttachmentRepo::MapToAttachment(const QSqlQuery& query)
 {
     return {
         .AttachmentId = query.value("attachment_id").toInt(),
-        .FileName = query.value("attachment_name").toString(),
-        .FilePath = query.value("attachment_path").toString(),
-        .Data = query.value("attachment_data").toByteArray(),
-        .CreatedAt = query.value("created_at").toString()
+        .FileName = query.value("filename").toString(),
+        .FilePath = query.value("filepath").toString(),
+        .Data = query.value("data").toByteArray(),
+        .CreatedAt = query.value("create_at").toString()
     };
 }
 

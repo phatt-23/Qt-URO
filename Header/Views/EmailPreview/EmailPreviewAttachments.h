@@ -17,14 +17,18 @@ public:
     EmailPreviewAttachments(Ref<DIContainer> const& diContainer, QWidget* parent);
     ~EmailPreviewAttachments() override;
 
-    void ProjectEmail(Email const& email);
+    void ProjectEmail(int emailId);
+    void Clear() const;
+
+private:
+    void BindEvents() override;
 
 private:
     Ref<DIContainer> m_DiContainer;
     
-    QScrollArea m_ScrollArea;
-    QWidget m_Container;
-    QVBoxLayout m_ContainerLayout;
+    QScrollArea* m_ScrollArea;
+    QWidget* m_Container;
+    QVBoxLayout* m_ContainerLayout;
 };
 
 
