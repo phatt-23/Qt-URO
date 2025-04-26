@@ -13,6 +13,7 @@
 
 
 class EmailPreview final : public QComponent {
+    Q_OBJECT
 public:
     explicit EmailPreview(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
     ~EmailPreview() override;
@@ -31,6 +32,15 @@ private:
     EmailPreviewContent m_EmailPreviewContent;
 };
 
+
+struct EditButtonClickedEvent final : EventBase
+{
+    EditButtonClickedEvent(const int emailId)
+        : EmailId(emailId) {}
+    int EmailId;
+};
+
+struct CloseButtonClickedEvent final : EventBase {};
 
 
 #endif //EMAILPREVIEW_H

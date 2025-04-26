@@ -26,8 +26,16 @@ file(GLOB_RECURSE sources "Source/**.cpp")
 add_executable(QtEmailClient 
         ${headers}
         ${sources}
-        Header/Views/EmailView/BaseView.cpp
-        Header/Views/EmailView/BaseView.h
+        Header/Views/EmailPreview/EmailPreviewAttachmentCard.cpp
+        Header/Views/EmailPreview/EmailPreviewAttachmentCard.h
+        Source/EmailEditorToolbar.cpp
+        Header/Views/ComposeView/EmailEditorToolbar.h
+        Source/EmailEditorHeader.cpp
+        Header/Views/ComposeView/EmailEditorHeader.h
+        Source/EmailEditorBody.cpp
+        Header/Views/ComposeView/EmailEditorBody.h
+        Header/Views/ComposeView/AttachmentSidebarCard.cpp
+        Header/Views/ComposeView/AttachmentSidebarCard.h
 )
 
 target_link_libraries(QtEmailClient
@@ -45,10 +53,12 @@ target_include_directories(QtEmailClient PUBLIC
         ./Header/Views
         ./Header/Views/ComposeView
         ./Header/Views/EmailPreview
+        ./Header/Views/ContactsView
+        ./Header/Views/EmailView
         ./Header/Views/EmailView/EmailListViews
         ./Header/Views/EmailView/EmailCardList
         ./Header/Database
-        ./Header/Dialog
+        ./Header/Utility
         ./Source
 )
 

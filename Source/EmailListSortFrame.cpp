@@ -7,7 +7,9 @@
 EmailListSortFrame::EmailListSortFrame(const Ref<DIContainer>& diContainer, QWidget* parent)
     : QComponent("EmailListSortFrame", parent), m_DiContainer(diContainer)
 {
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    auto layout = new QVBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
 
     auto ascending = new QRadioButton(tr("Ascending"), this);
     auto descending = new QRadioButton(tr("Descending"), this);

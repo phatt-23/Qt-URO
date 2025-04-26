@@ -12,6 +12,7 @@
 
 class EmailPreviewBody final : public QComponent 
 {
+    Q_OBJECT
 public:
     explicit EmailPreviewBody(QWidget* parent);
     ~EmailPreviewBody() override;

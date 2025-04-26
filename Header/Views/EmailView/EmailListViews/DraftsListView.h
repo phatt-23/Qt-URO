@@ -11,6 +11,7 @@
 
 
 class DraftsListView final : public EmailListView {
+    Q_OBJECT
 public:
     explicit DraftsListView(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
     void ShowEmails(QString const& searchString) override;

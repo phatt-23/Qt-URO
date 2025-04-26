@@ -61,10 +61,11 @@ User UserRepo::GetUser(const int userId) const
 
 bool UserRepo::AddUser(const User& user) const
 {
-    QSqlQuery query(R"(
+    QSqlQuery query(m_DbService->GetDatabase());
+    query.prepare(R"(
         INSERT INTO user(email, first_name, last_name)
         VALUES (:email, :first_name, :last_name)
-    )", m_DbService->GetDatabase());
+    )");
 
     query.bindValue(":email", user.Email);
     query.bindValue(":first_name", user.FirstName);

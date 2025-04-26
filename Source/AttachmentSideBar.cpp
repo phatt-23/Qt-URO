@@ -1,39 +1,39 @@
-//
-// Created by phatt on 4/8/25.
-//
-
 #include "../Header/Views/ComposeView/AttachmentSideBar.h"
+
+#include "AttachmentSidebarCard.h"
+#include "AttachmentViewerDialog.h"
 #include "EmailEditor.h"
 #include "EventBus.h"
-#include "SideBar.h"
-#include <QImageReader>
-#include <QDialog>
 
-#include "AttachmentViewerDialog.h"
 
 
 AttachmentSideBar::AttachmentSideBar(const Ref<DIContainer>& diContainer, QWidget* parent)
     : QComponent("AttachmentSideBar", parent), m_DiContainer(diContainer)
-    , m_AttachmentsView(new QTableView(this))
-    // , m_Model(new QStandardItemModel(0, 2, m_AttachmentsView))
-    , m_Model(new QStandardItemModel(0, 1, m_AttachmentsView))
+    , m_ContainerWidget(new QWidget(this))
+    , m_ContainerLayout(new QVBoxLayout(m_ContainerWidget))
 {
-    // project model into view
-    m_AttachmentsView->setModel(m_Model);
+    auto* scrollArea = new QScrollArea(this);
+    scrollArea->setWidgetResizable(true);
 
-    // setup model
-    m_Model->setHeaderData(0, Qt::Horizontal, QString("Filename"));
-    // m_Model->setHeaderData(1, Qt::Horizontal, QString("Size"));
+    m_ContainerLayout->setAlignment(Qt::AlignTop);
+    m_ContainerLayout->setContentsMargins(0, 0, 0, 0);
+    m_ContainerLayout->setSpacing(0);
 
-    // setup view
-    const auto view = static_cast<QTableView*>(m_AttachmentsView);
-    view->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    m_ContainerWidget->setLayout(m_ContainerLayout);
+    scrollArea->setWidget(m_ContainerWidget);
 
-    // test
-
-    // layout view
     const auto layout = new QVBoxLayout(this);
-    layout->addWidget(m_AttachmentsView);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+
+    layout->addWidget(new QLabel("Attachments", this));
+
+    auto* line = new QFrame;
+    line->setFrameShape(QFrame::HLine);
+    line->setFrameShadow(QFrame::Sunken);
+    layout->addWidget(line);
+
+    layout->addWidget(scrollArea);
 
     BindEvents();
 }
@@ -42,58 +42,51 @@ AttachmentSideBar::~AttachmentSideBar()
 {
 }
 
-// struct AttachToEmailEvent final : public EventBase {
-//     AttachToEmailEvent(const QStringList& attachments) : EventBase(), Attachments(attachments) {}
-//     const QList<QString>& Attachments;
-// };
-
+void AttachmentSideBar::Clear() const
+{
+    while (const QLayoutItem* item = m_ContainerLayout->takeAt(0)) {
+        if (QWidget* widget = item->widget()) {
+            widget->deleteLater();
+        }
+        delete item;
+    }
+}
 
 void AttachmentSideBar::BindEvents()
 {
-    auto bus = m_DiContainer->GetService<EventBus>();
+    auto const bus = m_DiContainer->GetService<EventBus>();
 
+    // Subscribe to the AttachToEmailEvent
     bus->Subscribe<AttachToEmailEvent>([this](const AttachToEmailEvent& e) {
         if (m_Readonly)
             return;
 
-        for (const QString& a : e.Attachments) 
-        {
-            m_Model->appendRow(QList<QStandardItem*>() << new QStandardItem(a));
+        for (const QString& filepath : e.Attachments) {
+            AddAttachment(filepath);
         }
     });
+}
 
+void AttachmentSideBar::AddAttachment(const QString& filepath)
+{
+    const auto card = new AttachmentSidebarCard(filepath, this);
+    m_ContainerLayout->addWidget(card);
 
-    auto view = static_cast<QTableView*>(m_AttachmentsView);
-
-    connect(view, &QAbstractItemView::pressed, this, [this, view](const QModelIndex& index) {
-        auto const menu = new QMenu(view); 
-        QAction const* openAction = menu->addAction("Open");
-        QAction const* removeAction = menu->addAction("Remove");
-
-        connect(removeAction, &QAction::triggered, this, [this, index]() {
-            m_Model->removeRow(index.row());
-        });
-
-        connect(openAction, &QAction::triggered, this, [this, index]() {
-            qInfo() << "Open action triggered";
-
-            const QStandardItem* item = m_Model->item(index.row());
-
-            const QString filepath = item->text();
-            auto const attachmentDialog = new AttachmentViewerDialog(filepath, this);
-            attachmentDialog->show();
-        });
-
-        menu->exec(QCursor::pos());  // Show the menu at the cursor position
+    connect(card, &AttachmentSidebarCard::RemoveClicked, [this](AttachmentSidebarCard* cardIntance)
+    {
+        cardIntance->deleteLater();
     });
 }
+
 
 QList<QString> AttachmentSideBar::GetAttachments() const
 {
     QStringList files;
-    for (int i = 0; i < m_Model->rowCount(); i++)
-        files.append(m_Model->item(i)->text());
+    for (int i = 0; i < m_ContainerLayout->count(); ++i) {
+        auto const* widget = m_ContainerLayout->itemAt(i)->widget();
+        if (auto const* label = widget->findChild<QLabel*>()) {
+            files.append(label->text());
+        }
+    }
     return files;
 }
-
-

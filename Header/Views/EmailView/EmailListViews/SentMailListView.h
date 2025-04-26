@@ -8,6 +8,7 @@
 
 
 class SentMailListView final : public EmailListView {
+    Q_OBJECT
 public:
     explicit SentMailListView(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
     void ShowEmails(QString const& searchString) override;

@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS email (
     sender_id INTEGER NOT NULL,
     subject TEXT NOT NULL,
     body TEXT NOT NULL,
-    status TEXT CHECK(status IN ('sent', 'draft', 'deleted', 'sent_draft')) DEFAULT 'sent',
+    status TEXT CHECK(status IN ('sent', 'draft', 'removed', 'deleted', 'sent_draft')) DEFAULT 'sent',
     sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (sender_id) REFERENCES user(user_id) ON DELETE CASCADE
 );

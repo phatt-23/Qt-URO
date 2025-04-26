@@ -13,6 +13,7 @@
 
 
 class InboxListView final : public EmailListView {
+    Q_OBJECT
 public:
     explicit InboxListView(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
 

@@ -14,6 +14,7 @@
 
 // abstract
 class EmailListView : public QComponent {
+    Q_OBJECT
 public:
     explicit EmailListView(const Ref<DIContainer>& diContainer, const QString& name, QWidget* parent = nullptr);
     ~EmailListView() override;

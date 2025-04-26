@@ -15,11 +15,13 @@
 
 
 class ViewPanel final : public QComponent {
+    Q_OBJECT
 public:
     explicit ViewPanel(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
+    void ShowView(ViewsEnum view);
 
 private slots:
-    void onSideBarButtonClicked(const SideBarButtonClickedEvent& event);
+    void BindEvents() override;
 
 private:
     Ref<DIContainer> m_DiContainer;

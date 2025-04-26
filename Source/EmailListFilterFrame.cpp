@@ -7,67 +7,76 @@
 #include <QDateEdit>
 #include <QCheckBox>
 
+#include "CreateKeyValueRow.h"
+
 EmailListFilterFrame::EmailListFilterFrame(const Ref<DIContainer>& diContainer, QWidget* parent)
     : QComponent("EmailListFilterFrame", parent), m_DiContainer(diContainer)
 {
     const auto layout = new QVBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
 
     // Filter by Date Range
-    auto* dateRangeLabel = new QLabel("Date Range:", this);
-    auto* startDateEdit = new QDateEdit(this);
-    auto* endDateEdit = new QDateEdit(this);
-    startDateEdit->setCalendarPopup(true);
-    endDateEdit->setCalendarPopup(true);
-    startDateEdit->setDisplayFormat("yyyy-MM-dd");
-    endDateEdit->setDisplayFormat("yyyy-MM-dd");
+    m_DateRangeLabel = new QLabel("Date Range:", this);
 
-    auto* dateRangeLayout = new QHBoxLayout();
-    dateRangeLayout->addWidget(startDateEdit);
-    dateRangeLayout->addWidget(new QLabel("to", this), Qt::AlignCenter);
-    dateRangeLayout->addWidget(endDateEdit);
+    m_StartDateEdit = new QDateEdit(this);
+    m_EndDateEdit = new QDateEdit(this);
 
-    layout->addWidget(dateRangeLabel);
-    layout->addLayout(dateRangeLayout);
+    m_StartDateEdit->setCalendarPopup(true);
+    m_EndDateEdit->setCalendarPopup(true);
+    m_StartDateEdit->setDisplayFormat("yyyy-MM-dd");
+    m_EndDateEdit->setDisplayFormat("yyyy-MM-dd");
+
+    m_DateRangeLayout = new QHBoxLayout();
+
+    m_DateRangeLayout->addLayout(CreateKeyValueRow("Start:", m_StartDateEdit, this));
+    m_DateRangeLayout->addStretch();
+    m_DateRangeLayout->addLayout(CreateKeyValueRow("End:", m_EndDateEdit, this));
+
+    layout->addWidget(m_DateRangeLabel);
+    layout->addLayout(m_DateRangeLayout);
 
     // Filter by Recipient
-    auto* recipientLabel = new QLabel("Recipient:", this);
-    auto* recipientLineEdit = new QLineEdit(this);
-    layout->addWidget(recipientLabel);
-    layout->addWidget(recipientLineEdit);
+    m_RecipientLabel = new QLabel("Recipient:", this);
+    m_RecipientLineEdit = new QLineEdit(this);
+    m_RecipientLineEdit->setPlaceholderText("Recipient...");
+    layout->addWidget(m_RecipientLabel);
+    layout->addWidget(m_RecipientLineEdit);
 
     // Filter by Read/Unread Status
-    auto* readCheckBox = new QCheckBox("Read", this);
-    auto* unreadCheckBox = new QCheckBox("Unread", this);
+    m_ReadCheckBox = new QCheckBox("Read", this);
+    m_UnreadCheckBox = new QCheckBox("Unread", this);
 
-    auto* readStatusLayout = new QHBoxLayout();
-    readStatusLayout->addWidget(readCheckBox);
-    readStatusLayout->addWidget(unreadCheckBox);
+    m_ReadStatusLayout = new QHBoxLayout();
+    m_ReadStatusLayout->addWidget(m_ReadCheckBox);
+    m_ReadStatusLayout->addWidget(m_UnreadCheckBox);
 
-    layout->addLayout(readStatusLayout);
+    layout->addLayout(m_ReadStatusLayout);
 
     // Filter by Attachments
-    auto* hasAttachmentCheckBox = new QCheckBox("Has Attachments", this);
-    layout->addWidget(hasAttachmentCheckBox);
+    m_HasAttachmentCheckBox = new QCheckBox("Has Attachments", this);
+    layout->addWidget(m_HasAttachmentCheckBox);
 
     // Apply Filters Button
-    auto* applyFiltersButton = new QPushButton("Apply Filters", this);
-    layout->addWidget(applyFiltersButton);
+    m_ApplyFiltersButton = new QPushButton("Apply Filters", this);
+    m_ApplyFiltersButtonLayout = new QHBoxLayout();
+    m_ApplyFiltersButtonLayout->addStretch();
+    m_ApplyFiltersButtonLayout->addWidget(m_ApplyFiltersButton);
 
-    // Connect the Apply Filters button to emit an event or handle the filtering logic
-    connect(applyFiltersButton, &QPushButton::clicked, this, [this, startDateEdit, endDateEdit, recipientLineEdit, readCheckBox, unreadCheckBox, hasAttachmentCheckBox]() {
-        // Gather filter values
-        const auto startDate = startDateEdit->date();
-        const auto endDate = endDateEdit->date();
-        const auto recipient = recipientLineEdit->text();
-        const bool isRead = readCheckBox->isChecked();
-        const bool isUnread = unreadCheckBox->isChecked();
-        const bool hasAttachments = hasAttachmentCheckBox->isChecked();
+    layout->addLayout(m_ApplyFiltersButtonLayout);
 
-        // Emit or handle the filtering logic here
-        qDebug() << "Filters applied:";
-        qDebug() << "Date Range:" << startDate.toString("yyyy-MM-dd") << "to" << endDate.toString("yyyy-MM-dd");
-        qDebug() << "Recipient:" << recipient;
-        qDebug() << "Read:" << isRead << "Unread:" << isUnread;
-        qDebug() << "Has Attachments:" << hasAttachments;
-    });
+    // connect(applyFiltersButton, &QPushButton::clicked, this, [this, startDateEdit, endDateEdit, recipientLineEdit, readCheckBox, unreadCheckBox, hasAttachmentCheckBox]() {
+    //     const auto startDate = startDateEdit->date();
+    //     const auto endDate = endDateEdit->date();
+    //     const auto recipient = recipientLineEdit->text();
+    //     const bool isRead = readCheckBox->isChecked();
+    //     const bool isUnread = unreadCheckBox->isChecked();
+    //     const bool hasAttachments = hasAttachmentCheckBox->isChecked();
+    //
+    //     qDebug() << "Filters applied:";
+    //     qDebug() << "Date Range:" << startDate.toString("yyyy-MM-dd") << "to" << endDate.toString("yyyy-MM-dd");
+    //     qDebug() << "Recipient:" << recipient;
+    //     qDebug() << "Read:" << isRead << "Unread:" << isUnread;
+    //     qDebug() << "Has Attachments:" << hasAttachments;
+    // });
 }

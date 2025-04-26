@@ -22,6 +22,9 @@ CategoryList::CategoryList(const Ref<DIContainer>& diContainer, QWidget* parent)
 
     // layout
     const auto layout = new QVBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+
     layout->setAlignment(Qt::AlignTop);
 
     for (const auto& button : m_Buttons)

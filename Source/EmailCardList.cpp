@@ -15,9 +15,15 @@ EmailCardList::EmailCardList(const Ref<DIContainer>& diContainer, QWidget* paren
     m_ScrollArea.setWidget(&m_Container);
 
     m_ContainerLayout.setAlignment(Qt::AlignTop);
+    m_ContainerLayout.setContentsMargins(0, 0, 0, 0);
+    m_ContainerLayout.setSpacing(0);
 
     // layout
     const auto layout = new QVBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+
+
     layout->addWidget(&m_ScrollArea);
 
     BindEvents();

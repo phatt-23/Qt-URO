@@ -11,6 +11,7 @@
 
 
 class EmailListSortFrame final : public QComponent {
+    Q_OBJECT
 public:
     explicit EmailListSortFrame(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
 

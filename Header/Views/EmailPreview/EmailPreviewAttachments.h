@@ -13,6 +13,7 @@
 
 class EmailPreviewAttachments final : public QComponent
 {
+    Q_OBJECT
 public:
     EmailPreviewAttachments(Ref<DIContainer> const& diContainer, QWidget* parent);
     ~EmailPreviewAttachments() override;

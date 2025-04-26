@@ -10,6 +10,7 @@
 
 class EmailPreviewToolbar final : public QComponent
 {
+    Q_OBJECT
 public:
     friend class EmailPreview;
 

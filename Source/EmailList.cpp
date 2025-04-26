@@ -28,8 +28,10 @@ EmailList::EmailList(const Ref<DIContainer>& diContainer, QWidget* parent)
 
     // layout
     const auto layout = new QVBoxLayout(this);
-    layout->setStretch(0, 0);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
 
+    layout->setStretch(0, 0);
     layout->addWidget(&m_SearchBar);  // index 0
 
     for (const auto& view : m_ListViews.values())
@@ -97,7 +99,7 @@ void EmailList::BindEvents()
     connect(&m_SearchBar, &EmailListSearchBar::EmailSearchEvent, [this](QString const& searchString)
     {
         qInfo() << "Search string:" << searchString;
-        qInfo() << "Put in like this:" << '%' + searchString.trimmed().toLower() + '%'
+        qInfo() << "Put in like this:" << '%' + searchString.trimmed().toLower() + '%';
         m_ListViews[m_CurrentListView]->ShowEmails(searchString);
     });
 }

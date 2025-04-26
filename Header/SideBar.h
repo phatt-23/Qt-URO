@@ -15,6 +15,7 @@
 
 
 class SideBar final : public QComponent {
+    Q_OBJECT
 public:
     explicit SideBar(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
 

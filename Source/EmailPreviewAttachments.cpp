@@ -10,35 +10,7 @@
 
 
 
-class EmailPreviewAttachmentCard final : public QComponent
-{
-public:  
-    EmailPreviewAttachmentCard(Attachment const& attachment, QWidget* parent)
-        : QComponent("EmailPreviewAttachmentCard", parent)
-        , m_FilenameLabel(new QLabel(attachment.FileName, this))
-        , m_FilePath(attachment.FileName)
-    {
-        auto const layout = new QHBoxLayout(this);    
-
-        auto const openButton = new QPushButton("Open");
-
-        layout->addWidget(m_FilenameLabel);
-        layout->addStretch();
-        layout->addWidget(openButton);
-
-        connect(openButton, &QPushButton::clicked, [this]
-        {
-            const auto dialog = new AttachmentViewerDialog(m_FilePath, this);
-            dialog->show();
-        });
-    }
-
-    ~EmailPreviewAttachmentCard() override {}
-
-private:
-    QLabel* m_FilenameLabel;
-    QString m_FilePath;
-};
+#include "EmailPreviewAttachmentCard.h"
 
 
 
@@ -54,8 +26,12 @@ EmailPreviewAttachments::EmailPreviewAttachments(Ref<DIContainer> const& diConta
 
     auto const& layout = new QVBoxLayout(this);
     layout->addWidget(m_ScrollArea);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
 
     m_ContainerLayout->setAlignment(Qt::AlignTop);
+    m_ContainerLayout->setContentsMargins(0, 0, 0, 0);
+    m_ContainerLayout->setSpacing(0);
 
     BindEvents();
 }

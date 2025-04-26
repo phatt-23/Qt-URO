@@ -17,6 +17,15 @@ int main(int argc, char** argv)
     QApplication app(argc, argv);
 
 
+    QFile file("Assets/Styles/styles.css"); 
+    if (file.open(QFile::ReadOnly)) {
+        QString styleSheet = QLatin1String(file.readAll());
+        app.setStyleSheet(styleSheet); 
+    } else {
+        qWarning() << "Failed to load stylesheet:" << file.errorString();
+    }
+    
+
     // Event bus service.
     const auto eventBus = CreateRef<EventBus>();
 

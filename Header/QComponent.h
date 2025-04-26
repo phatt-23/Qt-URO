@@ -9,7 +9,7 @@
 #include <QGroupBox>
 
 
-class QComponent : public QGroupBox 
+class QComponent : public QFrame
 {
     Q_OBJECT
 public:

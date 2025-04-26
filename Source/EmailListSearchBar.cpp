@@ -25,6 +25,9 @@ EmailListSearchBar::EmailListSearchBar(const Ref<DIContainer>& diContainer, QWid
     m_SortOptionsButton.hide();
 
     const auto layout = new QVBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+
     layout->addLayout(horizontalLayout);
     layout->addWidget(&m_FilterFrame);
     layout->addWidget(&m_SortFrame);

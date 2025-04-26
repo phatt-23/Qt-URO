@@ -4,6 +4,8 @@
 
 #include "../Header/Views/EmailView.h"
 
+#include "EmailCard.h"
+
 EmailView::EmailView(const Ref<DIContainer>& diContainer, QWidget* parent)
     : BaseView("EmailView", parent)
     , m_DiContainer(diContainer)
@@ -11,25 +13,41 @@ EmailView::EmailView(const Ref<DIContainer>& diContainer, QWidget* parent)
     , m_CategoryList(diContainer, this)
     , m_EmailList(diContainer, this)
     , m_EmailPreview(diContainer, this)
+    , m_Layout(new QVBoxLayout(this))
+
 {
     // split frames
     m_Splitter.addWidget(&m_CategoryList);
     m_Splitter.addWidget(&m_EmailList);
     m_Splitter.addWidget(&m_EmailPreview);
-
-    m_Splitter.setSizes({150, 500, 500}); // set init sizes
-    m_CategoryList.setMinimumWidth(150);    // lock the category list
-    m_CategoryList.setMaximumWidth(150);
+    // m_Splitter.setContentsMargins(0, 0, 0, 0);
 
     m_Splitter.setStretchFactor(0, 0);
     m_Splitter.setStretchFactor(1, 5);
     m_Splitter.setStretchFactor(2, 5);
 
     // layout
-    const auto layout = new QVBoxLayout(this);
-    layout->addWidget(&m_Splitter);
+    m_Layout->setContentsMargins(0, 0, 0, 0);
+    m_Layout->setSpacing(0);
+    m_Layout->addWidget(&m_Splitter);
+
+    BindEvents();
 }
 
 EmailView::~EmailView()
 {
+}
+
+void EmailView::BindEvents()
+{
+    m_DiContainer->GetService<EventBus>()->Subscribe<CloseButtonClickedEvent>([this](CloseButtonClickedEvent const& e)
+    {
+        m_EmailPreview.hide();
+    });
+
+    m_DiContainer->GetService<EventBus>()->Subscribe<PreviewEmailClicked>([this](PreviewEmailClicked const& e)
+    {
+        m_EmailPreview.show();
+    });
+
 }

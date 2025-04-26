@@ -13,6 +13,7 @@
 
 
 class CategoryList final : public QComponent {
+    Q_OBJECT
 public:
     enum CategoryListButton
     {

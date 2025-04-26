@@ -18,9 +18,10 @@ SideBar::SideBar(const Ref<DIContainer>& diContainer, QWidget* parent)
     m_Buttons.insert(ViewsEnum::QUIT, new QPushButton("Quit", this));
     m_Buttons.insert(ViewsEnum::LOGOUT, new QPushButton("Log-Out", this));
 
-
     // setup layout
     const auto layout = new QVBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
 
     // layout children
     layout->addWidget(m_Buttons[ViewsEnum::COMPOSE_VIEW]);
@@ -32,7 +33,10 @@ SideBar::SideBar(const Ref<DIContainer>& diContainer, QWidget* parent)
     layout->addWidget(m_Buttons[ViewsEnum::LOGOUT]);
     layout->addWidget(m_Buttons[ViewsEnum::QUIT]);
 
-
+    for (auto& button : m_Buttons)
+    {
+        button->setProperty("class", "sidebar_button");
+    }
 
     BindEvents();
 }

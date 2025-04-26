@@ -8,9 +8,10 @@
 
 
 class BaseView : public QComponent {
+    Q_OBJECT
 public:
     BaseView(QString const& widgetName, QWidget* parent);
-    ~BaseView() override = default;
+    virtual ~BaseView() override = default;
 
     virtual void OnEnter() {}
 };

@@ -22,7 +22,7 @@ public:
     ~FormInserter() override;
 
     /// should be async
-    bool InsertEmailWithAttachments(Email const& email, QStringList const& attachments, EmailStatus status = EmailStatus::SENT) const;
+    bool InsertEmailWithAttachments(Email const& email, QStringList const& recipients, QStringList const& attachments, EmailStatus status = EmailStatus::SENT) const;
 
 private:
     Ref<EventBus> m_EventBus;

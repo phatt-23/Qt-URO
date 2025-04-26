@@ -1,0 +1,263 @@
+
+/* Global Styles */
+QWidget {
+    font-size: 12px;
+}
+
+/* Style for QComponent */
+QComponent {
+    border: 1px solid lightgray;
+    border-radius: 2px;
+    padding: 0px;
+    margin: 0px;
+}
+
+QScrollArea {
+    border: none;
+}
+
+QPushButton:checked {
+
+}
+
+SideBar {
+    padding: 2px;
+}
+
+SideBar QPushButton {
+    padding: 4px;
+    margin: 2px;
+}
+
+ViewPanel {
+    padding: 0px;
+    border: none;
+}
+
+EmailView {
+    padding: 2px;
+}
+
+EmailView QVBoxLayout {
+    margin: 0;
+    padding: 0;
+}
+
+EmailView QSplitter {
+    margin: 0;
+    padding: 0;
+}
+
+EmailPreviewAttachmentCard {
+    border: 1px lightgray solid;
+    border-radius: 2px;
+}
+
+CategoryList {
+    width: 100px;
+}
+
+CategoryList QPushButton {
+    padding: 4px;
+    margin: 2px;
+}
+
+EmailList {
+    padding: 2px;
+}
+
+EmailListSearchBar {
+    padding: 2px;
+    margin-bottom: 2px;
+}
+
+EmailListSearchBar QLineEdit {
+    padding: 3px;
+}
+
+EmailListSearchBar QPushButton {
+    margin-left: 2px;
+    padding: 4px;
+    min-width: 50px;
+}
+
+EmailListView {
+    border: none;
+    padding: 0px;
+}
+
+EmailCardList QScrollArea {
+    margin: 0px;
+    padding: 0px;
+}
+
+EmailCard {
+    margin: 2px;
+    padding: 4px;
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+EmailCard QPushButton {
+    padding: 2px;
+    margin: 2px;
+}
+
+
+
+
+EmailPreviewContent {
+    margin: 2px;
+    padding: 2px;
+}
+
+EmailPreviewToolbar {
+    padding: 2px;
+    margin: 2px;
+}
+
+EmailPreviewToolbar QPushButton[class="preview-toolbar-button"] {
+    padding: 2px;
+    margin-right: 2px;
+}
+
+EmailPreviewHeader {
+    padding: 4px;
+}
+
+EmailPreviewHeader QLabel[class="subject-value-label"] {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+EmailPreviewBody {
+    padding: 4px;
+    margin-top: 2px;
+}
+
+EmailPreviewBody QTextEdit {
+    border-radius: 4px;
+}
+
+EmailPreviewAttachments {
+    padding: 2px;
+}
+
+EmailPreviewAttachmentCard {
+    margin: 2px;
+    padding: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+    border: 1px solid lightgray;
+    border-radius: 2px;
+}
+
+
+EmailListFilterFrame {
+    margin-top: 2px;
+    padding: 4px;
+}
+
+EmailListFilterFrame QLabel {
+    margin-top: 8px;
+    margin-bottom: 4px;
+}
+
+EmailListFilterFrame QLineEdit {
+    margin-bottom: 4px;
+    padding: 2px;
+}
+
+ComposeView {
+    padding: 2px;
+}
+
+ComposeView QPushButton[class="open-in-new"] {
+    margin: 0px 2px 2px;
+    padding: 2px;
+    width: 80px;
+}
+
+EmailEditor {
+    margin: 0px;
+    border: none;
+}
+
+EmailEditorToolbar {
+    margin: 2px;
+    padding: 2px;
+}
+
+EmailEditorToolbar QPushButton {
+    margin-left: 1px;
+    margin-right: 1px;
+    min-width: 60px;
+    padding: 2px;
+}
+
+EmailEditorHeader {
+    margin: 2px;
+    padding: 2px;
+    padding-left: 8px;
+}
+
+EmailEditorHeader QLabel {
+    margin-right: 20px;
+    margin-bottom: 1px;
+    margin-top: 1px;
+}
+
+
+EmailEditorHeader QLineEdit {
+    margin-bottom: 1px;
+    margin-top: 1px;
+}
+
+EmailEditorHeader QPushButton {
+    min-width: 100px;
+    margin-bottom: 1px;
+    margin-top: 1px;
+    padding: 1px;
+}
+
+EmailEditorBody {
+    margin: 2px;
+    padding: 4px;
+}
+
+AttachmentSideBar {
+    padding: 2px;
+}
+
+AttachmentSidebarCard {
+    margin: 2px;
+}
+
+AttachmentSideBar QLabel {
+    padding: 2px;
+}
+
+
+ContactsView QScrollArea {
+    padding: 2px;
+    margin: 2px;
+    border: 1px lightgray solid;
+}
+
+ContactsView QPushButton {
+    margin: 2px;
+    padding: 2px;
+}
+
+ContactCard {
+    padding: 2px;
+    padding-left: 8px;
+    padding-right: 8px;
+    margin: 2px;
+}
+
+ContactsView QScrollArea {
+    border: 1px solid lightgray;
+    border-radius: 2px;
+    background-color: #f0f0f0;
+}

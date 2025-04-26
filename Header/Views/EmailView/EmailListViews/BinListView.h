@@ -10,6 +10,7 @@
 
 
 class BinListView final : public EmailListView {
+    Q_OBJECT
 public:
     explicit BinListView(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
     void ShowEmails(QString const& searchString) override;

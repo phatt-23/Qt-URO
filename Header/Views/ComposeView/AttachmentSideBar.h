@@ -5,46 +5,39 @@
 #ifndef ATTACHMENTSIDEBAR_H
 #define ATTACHMENTSIDEBAR_H
 
-
 #include "DIContainer.h"
 #include "QComponent.h"
 #include "QtWidgets.h"
 
-
 class AttachmentSideBar final : public QComponent {
+    Q_OBJECT
 public:
     explicit AttachmentSideBar(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
     ~AttachmentSideBar() override;
 
-    QList<QString> GetAttachments() const;
-    
-    inline void SetReadonly(bool value) { m_Readonly = value; }
-    inline void Clear() const
-    {
-        m_Model->clear();
-    }
+    [[nodiscard]] QList<QString> GetAttachments() const;
+    void AddAttachment(const QString& filepath);
+    inline void SetReadonly(const bool value) { m_Readonly = value; }
+    void Clear() const;
 
-    inline void SetList(QStringList const& attachments) const
+    inline void SetList(const QList<QString>& filepaths)
     {
-        Clear();
-        for (const QString& a : attachments)
-        {
-            m_Model->appendRow(QList<QStandardItem*>() << new QStandardItem(a));
+        Clear(); 
+        for (const QString& filepath : filepaths) {
+            AddAttachment(filepath); 
         }
     }
-
+    
 private:
     void BindEvents() override;
 
 private:
     Ref<DIContainer> m_DiContainer;
 
-    QAbstractItemView* m_AttachmentsView;
-    QStandardItemModel* m_Model;
+    QWidget* m_ContainerWidget;     
+    QVBoxLayout* m_ContainerLayout; 
 
     bool m_Readonly = false;
 };
 
-
-
-#endif //ATTACHMENTSIDEBAR_H
+#endif // ATTACHMENTSIDEBAR_H

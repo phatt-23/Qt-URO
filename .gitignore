@@ -5,3 +5,7 @@ build/
 
 *.zip
 
+./Assets/Sql/emails.db
+
+
+

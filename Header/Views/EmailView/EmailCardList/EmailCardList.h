@@ -10,6 +10,7 @@
 
 class EmailCardList final : public QComponent
 {
+    Q_OBJECT
 public:
     explicit EmailCardList(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
     ~EmailCardList() override;

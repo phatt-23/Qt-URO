@@ -9,6 +9,7 @@
 
 
 class Menubar final : public QMenuBar {
+    Q_OBJECT
 public:
     explicit Menubar(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
 

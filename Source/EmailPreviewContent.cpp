@@ -14,9 +14,9 @@ EmailPreviewContent::EmailPreviewContent(const Ref<DIContainer>& diContainer, QW
     m_Splitter.addWidget(&m_Body);
     m_Splitter.addWidget(&m_Attachments);
 
-    // Set initial sizes for the splitter
-    QList<int> sizes = {300, 150}; 
-    m_Splitter.setSizes(sizes);
+    // set initial sizes for the splitter
+    // QList<int> sizes = {300, 150};
+    // m_Splitter.setSizes(sizes);
 
     m_Attachments.hide();
 
@@ -25,6 +25,8 @@ EmailPreviewContent::EmailPreviewContent(const Ref<DIContainer>& diContainer, QW
 
     layout->addWidget(&m_Header); layout->setStretch(0, 0);
     layout->addWidget(&m_Splitter); layout->setStretch(1, 1);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
 
     BindEvents();
 }

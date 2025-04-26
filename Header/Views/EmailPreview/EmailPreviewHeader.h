@@ -12,19 +12,22 @@
 
 class EmailPreviewHeader : public QComponent
 {
+    Q_OBJECT
 public:
     EmailPreviewHeader(Ref<DIContainer> const& diContainer, QWidget* parent);
     ~EmailPreviewHeader() override;
    
     void ProjectEmail(Email const& email);
-    void Clear();
+    void Clear() const;
 
 private:
     Ref<DIContainer> m_DiContainer;
 
-    QLabel m_SubjectLabel;
-    QLabel m_SenderLabel;
-    QLabel m_RecipientsLabel;
+    QLabel* m_SubjectValueLabel;
+    QLabel* m_SenderLabel;
+    QLabel* m_SenderValueLabel;
+    QLabel* m_RecipientsLabel;
+    QLabel* m_RecipientsValueLabel;
 };
 
 

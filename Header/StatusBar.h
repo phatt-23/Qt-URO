@@ -13,6 +13,7 @@
 class DIContainer;
 
 class StatusBar final : public QStatusBar {
+    Q_OBJECT
 public:
     explicit StatusBar(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
 

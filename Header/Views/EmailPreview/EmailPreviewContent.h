@@ -15,6 +15,7 @@
 
 class EmailPreviewContent final : public QComponent
 {
+    Q_OBJECT
 public:
     friend class EmailPreview;
 public:

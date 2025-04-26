@@ -8,5 +8,4 @@ StatusBar::StatusBar(const Ref<DIContainer>& diContainer, QWidget* parent)
     : QStatusBar(parent), m_DiContainer(diContainer)
 {
     this->showMessage("TRA0163");
-
 }

@@ -9,74 +9,88 @@
 #include <qcombobox.h>
 
 #include "DIContainer.h"
+#include "EmailEditorBody.h"
+#include "EmailEditorHeader.h"
+#include "EmailEditorToolbar.h"
 #include "EventBus.h"
 #include "QComponent.h"
 #include "QtWidgets.h"
 
 
+class EmailEditorBody;
+
 class EmailEditor final : public QComponent {
+    Q_OBJECT
 public:
     struct DataContext {
-        explicit DataContext(QWidget* parent)
-            : SenderLineEdit(parent)
-            , RecipientsLideEdit(parent)
-            , SubjectLineEdit(parent)
-            , TextBody(parent) {}
+        explicit DataContext(
+            QString const& sender,
+            QStringList const& recipients,
+            QString const& subject,
+            QString const& body
+        )
+            : Sender(sender)
+            , Recipients(recipients)
+            , Subject(subject)
+            , Body(body) {}
 
-        QLineEdit SenderLineEdit;
-        QLineEdit RecipientsLideEdit;
-        QLineEdit SubjectLineEdit;
-        QTextEdit TextBody;
+        QString Sender;
+        QStringList Recipients;
+        QString Subject;
+        QString Body;
     };
 
-    enum ToolbarButtons { SEND, SAVE, ATTACH };
 
 public:
     explicit EmailEditor(const Ref<DIContainer>& diContainer, QWidget* parent = nullptr);
     ~EmailEditor() override;
 
-    const DataContext& GetDataContext() const { return *m_Data.get(); }
-
-
-    inline void SetReadonly(const bool value) const
+    [[nodiscard]] DataContext GetDataContext() const
     {
-        m_Data->RecipientsLideEdit.setReadOnly(value);
-        m_Data->SubjectLineEdit.setReadOnly(value);
-        m_Data->TextBody.setReadOnly(value);
+        QStringList recipients = m_Header->m_RecipientsLineEdit->text().split(',', Qt::SkipEmptyParts);
+        QStringList recipientsTrimmed;
+        for (auto r : recipients)
+        {
+            recipientsTrimmed.append(r.trimmed());
+        }
+
+        return DataContext(
+            m_Header->m_SenderLineEdit->text(),
+            recipientsTrimmed,
+            m_Header->m_SubjectLineEdit->text(),
+            m_Body->GetText());
     }
 
-    inline void SetEntries(QString const& recipients, QString const& subject, QString const& body) const
+    void SetReadonly(const bool value) const
     {
-        m_Data->RecipientsLideEdit.setText(recipients);
-        m_Data->SubjectLineEdit.setText(subject);
-        m_Data->TextBody.setText(body);
+        m_Header->m_SubjectLineEdit->setReadOnly(value);
+        m_Header->m_RecipientsLineEdit->setReadOnly(value);
+        m_Body->m_TextBody->setReadOnly(value);
     }
 
-    inline void ClearEntries() const
+    void SetEntries(QString const& recipients, QString const& subject, QString const& body) const
     {
-        m_Data->RecipientsLideEdit.clear();
-        m_Data->SubjectLineEdit.clear();
-        m_Data->TextBody.clear();
+        m_Header->m_RecipientsLineEdit->setText(recipients);
+        m_Header->m_SubjectLineEdit->setText(subject);
+        m_Body->m_TextBody->setText(body);
     }
 
-    void RenewContacts();
+    void ClearEntries() const
+    {
+        m_Header->m_RecipientsLineEdit->clear();
+        m_Header->m_SubjectLineEdit->clear();
+        m_Body->m_TextBody->clear();
+    }
 
 private:
     void BindEvents() override;
-    void ShowContactMenu();
 
 private:
     Ref<DIContainer> m_DiContainer;
 
-    QComponent m_ToolbarFrame;
-    QMap<ToolbarButtons, QPushButton*> m_ToolbarButtons;
-
-    QComponent m_HeaderFrame;
-    QComponent m_BodyFrame;
-
-    Scope<DataContext> m_Data;
-
-    QPushButton* m_ContactChooser;
+    EmailEditorToolbar* m_Toolbar;
+    EmailEditorHeader* m_Header;
+    EmailEditorBody* m_Body;
 };
 
 /////////////////////////////////////////
@@ -109,10 +123,10 @@ struct AttachToEmailEvent final : public EventBase
 inline QDebug operator<<(QDebug dbg, const EmailEditor::DataContext& d)
 {
     dbg.nospace()
-    << "sender: " << d.SenderLineEdit.text()
-    << ", recipients: " << d.RecipientsLideEdit.text()
-    << ", subject: " << d.SubjectLineEdit.text()
-    << ", text: " << d.TextBody.toPlainText();
+    << "sender: " << d.Sender
+    << ", recipients: " << d.Recipients
+    << ", subject: " << d.Subject
+    << ", text: " << d.Body;
     return dbg;
 }
 

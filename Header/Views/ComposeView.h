@@ -14,6 +14,7 @@
 
 
 class ComposeView final : public BaseView {
+    Q_OBJECT
 public:
     explicit ComposeView(const Ref<DIContainer>& diContainer, QWidget* parent, const bool isDialog = false);
 

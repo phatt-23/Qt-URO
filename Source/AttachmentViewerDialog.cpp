@@ -2,11 +2,14 @@
 // Created by phatt on 4/25/25.
 //
 
-#include "../Header/Dialog/AttachmentViewerDialog.h"
+#include "../Header/Utility/AttachmentViewerDialog.h"
 
 AttachmentViewerDialog::AttachmentViewerDialog(QString const& filepath, QWidget* parent): QDialog(parent)
 {
     auto const dialogLayout = new QVBoxLayout(this);
+    dialogLayout->setContentsMargins(0, 0, 0, 0);
+    dialogLayout->setSpacing(0);
+
 
     this->setWindowTitle("Attachment Viewer");
     auto const label = new QLabel("File: " + filepath, this);

@@ -23,8 +23,8 @@ public:
     bool AddUser(const User& user) const;
     QList<User> GetRecipients(int emailId) const;
 
-private:
     static User MapToUser(const QSqlQuery& query);
+private:
 
 private:
     Ref<DbContext> m_DbService;

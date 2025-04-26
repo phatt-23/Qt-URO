@@ -11,6 +11,7 @@
 
 class EmailCard : public QComponent 
 {
+    Q_OBJECT
 public:
     explicit EmailCard(Ref<DIContainer> const& diContainer, const Email& email, const QString& sender, QWidget* parent = nullptr);
     ~EmailCard() override;

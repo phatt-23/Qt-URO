@@ -4,9 +4,12 @@
 
 #include "../Header/Views/ComposeView.h"
 
+#include "AttachmentRepo.h"
 #include "EmailEditor.h"
+#include "EmailRepo.h"
 #include "FormInserter.h"
 #include "UserRepo.h"
+#include "EmailView/EmailPreview.h"
 
 
 ComposeView::ComposeView(const Ref<DIContainer>& diContainer, QWidget* parent, const bool isDialog)
@@ -30,15 +33,22 @@ ComposeView::ComposeView(const Ref<DIContainer>& diContainer, QWidget* parent, c
 
     // layout
     const auto layout = new QVBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+
     layout->addWidget(m_Splitter);
 
     // left split
     const auto leftSplitLayout = new QVBoxLayout(m_LeftSplit);
+    leftSplitLayout->setContentsMargins(0, 0, 0, 0);
+    leftSplitLayout->setSpacing(0);
+
     leftSplitLayout->addWidget(m_EmailEditor);
 
     if (m_IsDialog == false)
     {
         m_OpenInNewButton = new QPushButton("Open in New", m_LeftSplit);
+        m_OpenInNewButton->setProperty("class", "open-in-new");
         const auto buttonLayout = new QHBoxLayout();
         leftSplitLayout->addLayout(buttonLayout);
         buttonLayout->addStretch();
@@ -50,6 +60,9 @@ ComposeView::ComposeView(const Ref<DIContainer>& diContainer, QWidget* parent, c
 
     // right split
     const auto rightSplitLayout = new QVBoxLayout(m_RightSplit);
+    rightSplitLayout->setContentsMargins(0, 0, 0, 0);
+    rightSplitLayout->setSpacing(0);
+
     rightSplitLayout->addWidget(m_AttachmentSideBar);
 
     // events
@@ -81,26 +94,48 @@ void ComposeView::BindEvents()
     connect(m_OpenInNewButton, &QPushButton::clicked, this, &ComposeView::OpenInNewButtonClicked);
 
     auto const bus = m_DiContainer->GetService<EventBus>();
-    
+
+    bus->Subscribe<EditButtonClickedEvent>([this](EditButtonClickedEvent const& e)
+    {
+        const auto email = m_DiContainer->GetService<EmailRepo>()->GetEmail(e.EmailId);
+        auto recipients = m_DiContainer->GetService<UserRepo>()->GetRecipients(e.EmailId);
+        auto attachments = m_DiContainer->GetService<AttachmentRepo>()->GetAttachments(e.EmailId);
+
+        QStringList recipientEmails;
+        for (const auto& r : recipients)
+        {
+            recipientEmails.append(r.Email);
+        }
+
+        QStringList attachmentFiles;
+        for (const auto& a : attachments)
+        {
+            attachmentFiles.append(a.FilePath);
+        }
+
+        m_EmailEditor->SetEntries(recipientEmails.join(","), email.Subject, email.Body);
+        m_AttachmentSideBar->SetList(attachmentFiles);
+    });
+
     bus->Subscribe<SendEmailClickedEvent>([this](SendEmailClickedEvent const& e) 
     {
-        auto const attachmentFiles = m_AttachmentSideBar->GetAttachments(); 
+        auto const attachmentFiles = m_AttachmentSideBar->GetAttachments();
         auto const& emailData = m_EmailEditor->GetDataContext();
 
         // validate input
         QStringList errorMessages;
 
 
-        if (emailData.SenderLineEdit.text().isEmpty())
+        if (emailData.Sender.isEmpty())
             errorMessages.append("Senders can't be empty.");
 
-        if (emailData.RecipientsLideEdit.text().isEmpty())
+        if (emailData.Recipients.isEmpty())
             errorMessages.append("Recipients can't be empty.");
 
-        if (emailData.SubjectLineEdit.text().isEmpty())
+        if (emailData.Subject.isEmpty())
             errorMessages.append("Subjects can't be empty.");
 
-        if (emailData.TextBody.toPlainText().isEmpty())
+        if (emailData.Body.isEmpty())
             errorMessages.append("Body can't be empty.");
 
         if (!errorMessages.empty())
@@ -117,12 +152,16 @@ void ComposeView::BindEvents()
         try
         {
             Email const email = {
-                .SenderId = userRepo->GetUser(emailData.SenderLineEdit.text()).UserId,
-                .Subject = emailData.SubjectLineEdit.text(),
-                .Body = emailData.TextBody.toPlainText(),
+                .SenderId = userRepo->GetUser(emailData.Sender).UserId,
+                .Subject = emailData.Subject,
+                .Body = emailData.Body,
             };
 
-            inserter->InsertEmailWithAttachments(email, attachmentFiles);
+            if (!inserter->InsertEmailWithAttachments(email, emailData.Recipients, attachmentFiles))
+            {
+                return;
+            }
+
             ClearContent();
         }
         catch (std::exception const& ex)
@@ -130,7 +169,6 @@ void ComposeView::BindEvents()
             qCritical() << "Error:" << ex.what();
             return;
         }
-
     });
 
     bus->Subscribe<SaveEmailClickedEvent>([this](SaveEmailClickedEvent const& e)
@@ -144,12 +182,16 @@ void ComposeView::BindEvents()
         try
         {
             Email const email = {
-                .SenderId = userRepo->GetUser(emailData.SenderLineEdit.text()).UserId,
-                .Subject = emailData.SubjectLineEdit.text(),
-                .Body = emailData.TextBody.toPlainText(),
+                .SenderId = userRepo->GetUser(emailData.Sender).UserId,
+                .Subject = emailData.Subject,
+                .Body = emailData.Body,
             };
 
-            inserter->InsertEmailWithAttachments(email, attachmentFiles, EmailStatus::DRAFT);
+            if (!inserter->InsertEmailWithAttachments(email, emailData.Recipients, attachmentFiles))
+            {
+                return;
+            }
+
             ClearContent();
         }
         catch (std::exception const& ex)
@@ -173,15 +215,17 @@ void ComposeView::OpenInNewButtonClicked()
 
     auto composeView = new ComposeView(m_DiContainer, this, true);
 
-
     const auto& context = m_EmailEditor->GetDataContext();
     composeView->SetContent(
-        context.RecipientsLideEdit.text(),
-        context.SubjectLineEdit.text(),
-        context.TextBody.toPlainText(),
+        context.Recipients.join(","),
+        context.Subject,
+        context.Body,
         m_AttachmentSideBar->GetAttachments());
 
     const auto dialogLayout = new QVBoxLayout(dialog);
+    dialogLayout->setContentsMargins(0, 0, 0, 0);
+    dialogLayout->setSpacing(0);
+
     dialogLayout->addWidget(composeView);
 
     dialog->show();

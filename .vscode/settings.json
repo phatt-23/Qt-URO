@@ -4,6 +4,9 @@
         "filesystem": "cpp",
         "qstandarditem": "cpp",
         "qtsql": "cpp",
-        "qpushbutton": "cpp"
+        "qpushbutton": "cpp",
+        "qgroupbox": "cpp",
+        "new": "cpp",
+        "stdexcept": "cpp"
     }
 }

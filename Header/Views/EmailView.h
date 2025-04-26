@@ -14,11 +14,14 @@
 
 
 class EmailView final : public BaseView {
+    Q_OBJECT
 public:
     explicit EmailView(const Ref<DIContainer>& diContainer, QWidget* parent);
     ~EmailView() override;
 
     void OnEnter() override {};
+private:
+    void BindEvents() override;
 
 private:
     Ref<DIContainer> m_DiContainer;
@@ -28,6 +31,8 @@ private:
     CategoryList m_CategoryList;
     EmailList m_EmailList;
     EmailPreview m_EmailPreview;
+
+    QVBoxLayout* m_Layout;
 };
 
 

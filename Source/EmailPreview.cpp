@@ -13,6 +13,8 @@ EmailPreview::EmailPreview(const Ref<DIContainer>& diContainer, QWidget* parent)
     , m_EmailPreviewContent(m_DiContainer, this)
 {
     const auto layout = new QVBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
 
     layout->addWidget(&m_EmailPreviewToolbar); layout->setStretch(0, 0);
     layout->addWidget(&m_EmailPreviewContent); layout->setStretch(1, 1);
@@ -81,11 +83,12 @@ void EmailPreview::BindEvents()
     connect(m_EmailPreviewToolbar.m_Buttons[EmailPreviewToolbar::EDIT], &QPushButton::clicked, [this]()
     {
         // nothing
+        m_DiContainer->GetService<EventBus>()->ForwardEmit<EditButtonClickedEvent>(m_EmailPreviewContent.m_Email->EmailId);
     });
 
     connect(m_EmailPreviewToolbar.m_Buttons[EmailPreviewToolbar::CLOSE], &QPushButton::clicked, [this]()
     {
-
+        m_DiContainer->GetService<EventBus>()->ForwardEmit<CloseButtonClickedEvent>();
     });
 }
 

@@ -12,6 +12,8 @@ EmailPreviewToolbar::EmailPreviewToolbar(const Ref<DIContainer>& diContainer, QW
     m_Buttons[CLOSE] = new QPushButton("Close", this);
 
     const auto layout = new QHBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
 
     layout->addWidget(m_Buttons[REPLY]);
     layout->addWidget(m_Buttons[FORWARD]);
@@ -20,6 +22,12 @@ EmailPreviewToolbar::EmailPreviewToolbar(const Ref<DIContainer>& diContainer, QW
     layout->addWidget(m_Buttons[EDIT]);
     layout->addStretch();
     layout->addWidget(m_Buttons[CLOSE]);
+
+    m_Buttons[REPLY]->setProperty("class", "preview-toolbar-button");
+    m_Buttons[FORWARD]->setProperty("class", "preview-toolbar-button");
+    m_Buttons[REMOVE]->setProperty("class", "preview-toolbar-button");
+    m_Buttons[DELETE_FOREVER]->setProperty("class", "preview-toolbar-button");
+    m_Buttons[EDIT]->setProperty("class", "preview-toolbar-button");
 
     HideButtons();
 }

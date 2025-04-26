@@ -11,16 +11,27 @@
 
 
 class ContactsView final : public BaseView {
-
+    Q_OBJECT
 public:
     explicit ContactsView(const Ref<DIContainer>& diContainer, QWidget* parent);
     ~ContactsView() override;
+
+    void OnEnter() override;
+
+private:
+    void BindEvents() override;
 
 private:
     Ref<DIContainer> m_DiContainer;
 
     QAbstractItemView* m_ContactsView;
     QStandardItemModel* m_ContactsModel;
+
+    QScrollArea* m_ScrollArea;
+    QWidget* m_ContainerWidget;
+    QVBoxLayout* m_ContainerLayout;
+
+    QPushButton* m_AddNewContactButton;
 };
 
 

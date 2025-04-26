@@ -19,6 +19,8 @@ ViewPanel::ViewPanel(const Ref<DIContainer>& diContainer, QWidget* parent)
 
     // layout
     const auto layout = new QVBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
 
     for (auto it = m_Views.begin(); it != m_Views.end(); ++it)
     {
@@ -27,22 +29,37 @@ ViewPanel::ViewPanel(const Ref<DIContainer>& diContainer, QWidget* parent)
     }
 
     // initial view
-    m_Views[ViewsEnum::EMAIL_VIEW]->show();
+    ShowView(ViewsEnum::EMAIL_VIEW);
 
+    BindEvents();
+}
+
+void ViewPanel::BindEvents()
+{
     // events
     const auto bus = m_DiContainer->GetService<EventBus>();
+
     bus->Subscribe<SideBarButtonClickedEvent>([this](const auto& e) {
         qInfo() << "ViewPanel - Received:" << e;
-
-        if (m_Views.contains(e.View))
-        {
-            // hide all
-            for (const auto& widget : m_Views.values())
-                widget->hide();
-
-            // show selected
-            m_Views[e.View]->show();
-            m_Views[e.View]->OnEnter();
-        }
+        ShowView(e.View);
     });
+
+    bus->Subscribe<EditButtonClickedEvent>([this](EditButtonClickedEvent const& e)
+    {
+        ShowView(ViewsEnum::COMPOSE_VIEW);
+    });
+}
+
+void ViewPanel::ShowView(ViewsEnum const view)
+{
+    if (m_Views.contains(view))
+    {
+        // hide all
+        for (const auto& widget : m_Views.values())
+            widget->hide();
+
+        // show selected
+        m_Views[view]->show();
+        m_Views[view]->OnEnter();
+    }
 }

@@ -24,6 +24,9 @@ public:
     ~MainWindow() override;
 
 private:
+    void BindEvents();
+
+private:
     Ref<DIContainer> m_DiContainer;
 
     Ref<Menubar> m_Menubar;
@@ -31,5 +34,7 @@ private:
     Ref<ViewPanel> m_ViewPanel;
     Ref<StatusBar> m_StatusBar;
 };
+
+struct QuitEvent final : public EventBase {};
 
 #endif //MAINWINDOW_H

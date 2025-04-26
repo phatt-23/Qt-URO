@@ -18,6 +18,9 @@ MainWindow::MainWindow(const Ref<DIContainer>& diContainer, QWidget* parent)
 
     const auto centralWidget = new QWidget(this);  // main widget
     const auto layout = new QHBoxLayout(centralWidget);  // layout
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+
 
     centralWidget->setLayout(layout);  // main widget use layout
     setCentralWidget(centralWidget);  // main widget is centered
@@ -36,10 +39,29 @@ MainWindow::MainWindow(const Ref<DIContainer>& diContainer, QWidget* parent)
     // layout children
     layout->addWidget(m_SideBar.get());
     layout->addWidget(m_ViewPanel.get());
-    layout->setStretch(0, 1);   // SideBar
-    layout->setStretch(1, 8);   // ViewPanel
+    layout->setStretch(1, 1);   // ViewPanel
+
+    BindEvents();
 }
 
 MainWindow::~MainWindow()
 {
+}
+
+void MainWindow::BindEvents()
+{
+    auto const& bus = m_DiContainer->GetService<EventBus>();
+
+    bus->Subscribe<QuitEvent>([this](QuitEvent const& e)
+    { 
+        QCoreApplication::quit();
+    });
+
+    bus->Subscribe<SideBarButtonClickedEvent>([this](SideBarButtonClickedEvent const& e)
+    {
+        if (e.View == ViewsEnum::QUIT) 
+        {
+            QCoreApplication::quit();
+        }
+    });
 }
